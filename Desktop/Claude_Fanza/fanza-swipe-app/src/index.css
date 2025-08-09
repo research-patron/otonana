@@ -1,0 +1,143 @@
+@import "tailwindcss";
+
+/* グローバルスタイル */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: black;
+  color: white;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  overflow: hidden;
+}
+
+/* 垂直スワイプコンテナ */
+.swiper-container {
+  height: 100vh;
+  width: 100%;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  scroll-snap-stop: always;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  /* スクロールの改善 */
+  will-change: scroll-position;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  /* スクロールバウンスを無効化 */
+  overscroll-behavior: none;
+  /* スムーズスクロールを無効化（snap-typeで制御） */
+  scroll-behavior: auto;
+}
+
+.swiper-container::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+/* 個別の動画アイテム */
+.video-item {
+  height: 100vh;
+  width: 100%;
+  scroll-snap-align: start;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* ユーザー選択を無効化（長押し時のコピー防止） */
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -ms-user-select: none;
+  -moz-user-select: none;
+}
+
+/* 動画の中央配置を確実にする */
+.video-item video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/* モバイルでのオーバースクロール無効化 */
+@media (max-width: 768px) {
+  html, body {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+/* PCでの動画プレイヤー最適化 */
+@media (min-width: 769px) {
+  .video-wrapper {
+    max-width: 540px;
+    height: 90vh;
+    margin: 0 auto;
+    position: relative;
+  }
+  
+  .swiper-container {
+    max-width: 540px;
+    margin: 0 auto;
+    border-radius: 0.5rem;
+    overflow-y: scroll; /* PC版でもスクロールを許可 */
+  }
+}
+
+/* 横画面（ランドスケープ）モード */
+@media (orientation: landscape) {
+  .video-wrapper {
+    max-width: 100%;
+    width: 100%;
+    height: 100vh;
+  }
+  
+  .swiper-container {
+    max-width: 100%;
+    width: 100%;
+    height: 100vh;
+  }
+  
+  /* 横画面時はタイムラインを最下部に固定 */
+  .landscape-timeline {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 50 !important;
+  }
+}
+
+/* モバイル横画面での最適化 */
+@media (max-width: 768px) and (orientation: landscape) {
+  html, body {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .video-wrapper {
+    width: 100vw;
+    height: 100vh;
+  }
+  
+  .swiper-container {
+    width: 100vw;
+    height: 100vh;
+  }
+}
