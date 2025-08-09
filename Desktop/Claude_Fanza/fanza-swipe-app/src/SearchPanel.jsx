@@ -1,27 +1,7 @@
 import React, { useState } from 'react';
 
-const SearchPanel = ({ onSearch, onSelect, onClose, onSearchKeyword }) => {
+const SearchPanel = ({ onClose, onSearchKeyword }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
-  const [loading, setLoading] = useState(false);
-
-  const performSearch = async (query) => {
-    if (!query.trim()) {
-      setSearchResults([]);
-      return;
-    }
-    
-    setLoading(true);
-    try {
-      const results = await onSearch(query);
-      setSearchResults(results);
-    } catch (error) {
-      console.error('Search error:', error);
-      setSearchResults([]);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleSearchChange = (e) => {
     const query = e.target.value;
@@ -58,35 +38,6 @@ const SearchPanel = ({ onSearch, onSelect, onClose, onSearchKeyword }) => {
           閉じる
         </button>
       </div>
-      
-      {loading && (
-        <div className="text-center py-4">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto"></div>
-        </div>
-      )}
-      
-      {!loading && searchResults.length > 0 && (
-        <div className="max-h-96 overflow-y-auto">
-          <h3 className="text-sm font-bold mb-2 text-gray-400">検索結果 ({searchResults.length})</h3>
-          <div className="grid grid-cols-2 gap-2">
-            {searchResults.map(video => (
-              <div 
-                key={video.id}
-                className="bg-gray-800 rounded p-2 cursor-pointer hover:bg-gray-700"
-                onClick={() => onSelect(video)}
-              >
-                <img 
-                  src={video.thumbnail} 
-                  alt={video.title}
-                  className="w-full h-20 object-cover rounded mb-1"
-                />
-                <p className="text-xs font-medium truncate">{video.title}</p>
-                <p className="text-xs text-gray-400 truncate">{video.actress}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 };

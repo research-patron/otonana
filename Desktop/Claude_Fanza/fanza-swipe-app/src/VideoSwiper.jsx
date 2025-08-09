@@ -19,7 +19,9 @@ const VideoSwiper = ({
   videos, 
   onVideoChange, 
   onLoadMore,
-  loading
+  loading,
+  showLoadMoreButton = false,
+  hasMoreVideos = true
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isMuted] = useState(false); // Always false for audio enabled
@@ -35,6 +37,12 @@ const VideoSwiper = ({
   const [isLandscape, setIsLandscape] = useState(false);
   const [playbackRate, setPlaybackRate] = useState(1);
   const [isLongPressing, setIsLongPressing] = useState(false);
+  
+  // Pull-to-refresh state
+  const [isPulling, setIsPulling] = useState(false);
+  const [pullDistance, setPullDistance] = useState(0);
+  const [startY, setStartY] = useState(0);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
   
   const containerRef = useRef(null);
   const videoRefs = useRef([]);
@@ -161,8 +169,8 @@ const VideoSwiper = ({
         setCurrentIndex(newIndex);
         onVideoChange && onVideoChange(newIndex);
         
-        // 最後の動画に到達したらhasViewedAllをtrueにする
-        if (newIndex === videos.length - 1) {
+        // 5件毎に「次の動画を見る」ボタンを表示するロジック（FANZA版と同様）
+        if ((newIndex + 1) % 5 === 0 && newIndex === videos.length - 1) {
           setHasViewedAll(true);
         }
       }
@@ -221,7 +229,7 @@ const VideoSwiper = ({
     
     // 動画変更時に短時間コントロールを表示
     showControlsTemporarily();
-  }, [currentIndex, useIframe]);
+  }, [currentIndex, useIframe, videos]);
 
   // 再生時間の更新と再生状態の同期
   useEffect(() => {
@@ -240,7 +248,55 @@ const VideoSwiper = ({
     }, 100);
 
     return () => clearInterval(interval);
-  }, [currentIndex, videos, isPlaying]);
+  }, [currentIndex, videos, isPlaying, useIframe]);
+
+  // Pull-to-refresh functionality
+  const handleTouchStart = (e) => {
+    if (currentIndex === videos.length - 1 && hasViewedAll) {
+      setStartY(e.touches[0].clientY);
+      setIsPulling(true);
+    }
+  };
+
+  const handleTouchMove = (e) => {
+    if (!isPulling || isLoadingMore) return;
+    
+    const currentY = e.touches[0].clientY;
+    const diff = currentY - startY;
+    
+    // Only allow pull down (positive direction)
+    if (diff > 0) {
+      setPullDistance(Math.min(diff, 150)); // Max 150px pull
+      
+      // Add visual feedback
+      if (diff > 100) {
+        // Strong pull detected - prepare for auto-load
+      }
+    }
+  };
+
+  const handleTouchEnd = () => {
+    if (!isPulling || isLoadingMore) return;
+    
+    setIsPulling(false);
+    
+    // If pulled more than 100px, trigger load more automatically
+    if (pullDistance > 100) {
+      setIsLoadingMore(true);
+      setHasViewedAll(false);
+      setPullDistance(0);
+      
+      // Trigger load more with loading screen
+      if (onLoadMore) {
+        onLoadMore().finally(() => {
+          setIsLoadingMore(false);
+        });
+      }
+    } else {
+      // Reset pull distance with animation
+      setPullDistance(0);
+    }
+  };
 
   // 再生/一時停止切り替え
   const togglePlayPause = () => {
@@ -384,6 +440,13 @@ const VideoSwiper = ({
       <div 
         ref={containerRef}
         className="swiper-container"
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        style={{
+          transform: isPulling ? `translateY(${pullDistance * 0.5}px)` : 'none',
+          transition: isPulling ? 'none' : 'transform 0.3s ease-out'
+        }}
       >
         {videos.map((video, index) => (
           <div
@@ -852,8 +915,33 @@ const VideoSwiper = ({
         </div>
       </div>
 
+      {/* Pull-to-refresh indicator */}
+      {isPulling && (
+        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-50">
+          <div className="bg-black/70 px-4 py-2 rounded-full">
+            <div className="flex items-center space-x-2">
+              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              <span className="text-white text-xs">
+                {pullDistance > 100 ? '離すと読み込み開始' : '引っ張って更新'}
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Loading screen for pull-to-refresh */}
+      {isLoadingMore && (
+        <div className="absolute inset-0 bg-black/80 flex items-center justify-center z-50">
+          <div className="text-center text-white">
+            <div className="w-12 h-12 border-4 border-purple-500/30 border-t-purple-500 rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-lg mb-2">次の動画を読み込み中...</p>
+            <p className="text-sm text-gray-300">少々お待ちください</p>
+          </div>
+        </div>
+      )}
+
       {/* ローディングインジケーター */}
-      {loading && (
+      {loading && !isLoadingMore && (
         <div className="absolute bottom-24 left-1/2 transform -translate-x-1/2 z-20">
           <div className="bg-black/70 px-4 py-2 rounded-full">
             <div className="flex items-center space-x-2">
@@ -864,8 +952,20 @@ const VideoSwiper = ({
         </div>
       )}
 
-      {/* 次の動画を見るボタン */}
-      {hasViewedAll && currentIndex === videos.length - 1 && onLoadMore && (
+      {/* 5件毎の「次の動画を見る」ボタン (FANZA版と同様) */}
+      {showLoadMoreButton && hasMoreVideos && onLoadMore && (
+        <div className="absolute bottom-32 left-1/2 transform -translate-x-1/2 z-50">
+          <button
+            onClick={onLoadMore}
+            className="bg-white text-black px-6 py-3 rounded-full font-medium shadow-lg hover:shadow-xl transition-shadow"
+          >
+            次の動画を見る
+          </button>
+        </div>
+      )}
+
+      {/* 次の動画を見るボタン (従来のロジック) */}
+      {hasViewedAll && currentIndex === videos.length - 1 && onLoadMore && !showLoadMoreButton && (
         <div className="absolute bottom-32 left-1/2 transform -translate-x-1/2 z-50">
           <button
             onClick={() => {

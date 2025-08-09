@@ -4,13 +4,10 @@ import tailwindcss from '@tailwindcss/vite'
 import { copyFileSync, mkdirSync, existsSync, readdirSync, statSync } from 'fs'
 import { join } from 'path'
 
-// Plugin to copy post directory to dist
+// Plugin to copy post directory and DUGA content to dist
 const copyPostPlugin = () => ({
   name: 'copy-post',
   closeBundle() {
-    const sourceDir = 'public/post'
-    const targetDir = 'dist/post'
-    
     const copyDirectory = (src, dest) => {
       if (!existsSync(dest)) {
         mkdirSync(dest, { recursive: true })
@@ -29,9 +26,20 @@ const copyPostPlugin = () => ({
       })
     }
     
+    // Copy FANZA blog posts
+    const sourceDir = 'public/post'
+    const targetDir = 'dist/post'
     if (existsSync(sourceDir)) {
       copyDirectory(sourceDir, targetDir)
-      console.log('✅ Blog posts copied to dist/post')
+      console.log('✅ FANZA blog posts copied to dist/post')
+    }
+
+    // Copy DUGA content
+    const dugaSourceDir = 'public/duga'
+    const dugaTargetDir = 'dist/duga'
+    if (existsSync(dugaSourceDir)) {
+      copyDirectory(dugaSourceDir, dugaTargetDir)
+      console.log('✅ DUGA content copied to dist/duga')
     }
   }
 })
