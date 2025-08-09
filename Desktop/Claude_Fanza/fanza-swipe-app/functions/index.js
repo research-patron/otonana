@@ -1,13 +1,19 @@
+// ============================================================================
+// DEPENDENCIES
+// ============================================================================
 const {onCall, HttpsError} = require('firebase-functions/v2/https');
 const {logger} = require('firebase-functions');
 const {defineSecret} = require('firebase-functions/params');
 const axios = require('axios');
 
-// Secret Manager環境変数定義
+// ============================================================================
+// CONFIGURATION
+// ============================================================================
+// Secret Manager environment variables
 const fanzaApiId = defineSecret('FANZA_API_ID');
 const fanzaAffiliateId = defineSecret('FANZA_AFFILIATE_ID');
 
-// FANZA API設定
+// FANZA API configuration
 const FANZA_CONFIG = {
   BASE_URL: 'https://api.dmm.com/affiliate/v3/ItemList',
   SITE: 'FANZA',
@@ -16,13 +22,15 @@ const FANZA_CONFIG = {
   OUTPUT: 'json'
 };
 
-// レート制限とキャッシュ管理
+// ============================================================================
+// RATE LIMITING & CACHING
+// ============================================================================
 let requestCache = new Map();
 let requestTimes = [];
 const MAX_REQUESTS_PER_MINUTE = 10;
-const CACHE_DURATION = 5 * 60 * 1000; // 5分間
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
-// レート制限チェック
+// Rate limiting check
 const canMakeRequest = () => {
   const now = Date.now();
   const oneMinuteAgo = now - 60000;
@@ -30,12 +38,12 @@ const canMakeRequest = () => {
   return requestTimes.length < MAX_REQUESTS_PER_MINUTE;
 };
 
-// リクエスト記録
+// Record request timestamp
 const recordRequest = () => {
   requestTimes.push(Date.now());
 };
 
-// キャッシュチェック
+// Cache data retrieval
 const getCachedData = (key) => {
   const cached = requestCache.get(key);
   if (cached && (Date.now() - cached.timestamp) < CACHE_DURATION) {
@@ -47,7 +55,7 @@ const getCachedData = (key) => {
   return null;
 };
 
-// キャッシュ保存
+// Cache data storage
 const setCachedData = (key, data) => {
   requestCache.set(key, {
     data,
@@ -55,27 +63,45 @@ const setCachedData = (key, data) => {
   });
 };
 
-// 動画URL生成関数
+// ============================================================================
+// UTILITY FUNCTIONS
+// ============================================================================
+// Generate direct video URL
 const generateDirectVideoUrl = (content_id) => {
   return `https://cc3001.dmm.co.jp/litevideo/freepv/${content_id.slice(0,1)}/${content_id.slice(0,3)}/${content_id}/${content_id}_mhb_w.mp4`;
 };
 
+// Generate iframe embed URL
 const generateIframeUrl = (content_id) => {
   return `https://www.dmm.co.jp/litevideo/-/player/=/title=player/cid=${content_id}/`;
 };
 
-// FANZA API呼び出し関数
+// ============================================================================
+// CLOUD FUNCTIONS
+// ============================================================================
+
+// Main FANZA API function
 exports.getFanzaVideos = onCall(
   { 
     secrets: [fanzaApiId, fanzaAffiliateId],
     region: 'asia-northeast1',
-    maxInstances: 100
+    maxInstances: 100,
+    cors: {
+      origin: [
+        'https://otonana.org', 
+        'https://otonana-473e3.web.app',
+        'https://otonana-473e3.firebaseapp.com',
+        'http://localhost:3000',
+        'http://localhost:5173'
+      ],
+      methods: ['GET', 'POST', 'OPTIONS']
+    }
   },
   async (request) => {
     try {
       const {hits = 5, offset = 1, keyword} = request.data;
 
-      // Secret Manager環境変数から認証情報を取得（すべての空白文字を削除）
+      // Get API credentials from Secret Manager (remove all whitespace)
       const API_ID = fanzaApiId.value().replace(/\s+/g, '');
       const AFFILIATE_ID = fanzaAffiliateId.value().replace(/\s+/g, '');
 
@@ -116,7 +142,7 @@ exports.getFanzaVideos = onCall(
     }
 
 
-    // FANZA API呼び出し
+    // Call FANZA API
     const response = await axios.get(FANZA_CONFIG.BASE_URL, {
       params,
       timeout: 10000
@@ -127,7 +153,7 @@ exports.getFanzaVideos = onCall(
     if (response.data.result && response.data.result.items) {
       const items = response.data.result.items;
       
-      // 結果をマップ
+      // Map API response to our format
       const mappedItems = items.map(item => {
         let videoUrl = null;
         if (item.content_id) {
@@ -155,7 +181,7 @@ exports.getFanzaVideos = onCall(
         };
       });
 
-      // キャッシュに保存
+      // Save to cache
       setCachedData(cacheKey, mappedItems);
 
       return {success: true, data: mappedItems};
@@ -172,15 +198,15 @@ exports.getFanzaVideos = onCall(
       throw error;
     }
     
-    // 400 Bad Requestエラーの詳細な処理
+    // Handle 400 Bad Request errors in detail
     if (error.response && error.response.status === 400) {
       logger.error('400 Bad Request from FANZA API', {
         errorMessage: error.response.data?.result?.message || 'No error message'
       });
       
-      // APIからのエラーメッセージを含める
-      const apiErrorMessage = error.response.data?.result?.message || '認証情報を確認してください';
-      throw new HttpsError('invalid-argument', `FANZA API エラー: ${apiErrorMessage}`);
+      // Include API error message
+      const apiErrorMessage = error.response.data?.result?.message || 'Please check authentication credentials';
+      throw new HttpsError('invalid-argument', `FANZA API Error: ${apiErrorMessage}`);
     }
     
     if (error.code === 'ECONNABORTED') {
@@ -191,11 +217,21 @@ exports.getFanzaVideos = onCall(
   }
 });
 
-// ヘルスチェック用
+// Health check function
 exports.healthCheck = onCall(
   { 
     region: 'asia-northeast1',
-    maxInstances: 100
+    maxInstances: 100,
+    cors: {
+      origin: [
+        'https://otonana.org', 
+        'https://otonana-473e3.web.app',
+        'https://otonana-473e3.firebaseapp.com',
+        'http://localhost:3000',
+        'http://localhost:5173'
+      ],
+      methods: ['GET', 'POST', 'OPTIONS']
+    }
   },
   async (request) => {
     const now = Date.now();

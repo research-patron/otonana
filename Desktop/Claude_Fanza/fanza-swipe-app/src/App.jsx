@@ -1,54 +1,43 @@
 import React, { useState, useEffect } from 'react';
+import { Search, Settings, Info } from 'lucide-react';
+import { httpsCallable, connectFunctionsEmulator } from 'firebase/functions';
+import { initializeApp } from 'firebase/app';
+
+// Components
 import VideoSwiper from './VideoSwiper';
 import ProductDetailsModal from './ProductDetailsModal';
 import OnboardingScreen from './OnboardingScreen';
 import SearchPanel from './SearchPanel';
 import SettingsPanel from './SettingsPanel';
-import { Search, Settings, Info } from 'lucide-react';
-import { getFunctions, httpsCallable, connectFunctionsEmulator } from 'firebase/functions';
-import { initializeApp } from 'firebase/app';
+
+// Configuration and utilities
 import firebaseConfig from './config/firebase';
-import { createFunctionsInstance, getFunctionsRegion } from './config/functions';
+import { createFunctionsInstance } from './config/functions';
 import ApiRateLimiter from './apiRateLimiter';
-import { testFirebaseFunctions } from './utils/firebaseTest';
 
-// Firebase初期化
+// ============================================================================
+// FIREBASE CONFIGURATION
+// ============================================================================
 const app = initializeApp(firebaseConfig);
-
-// Cloud Functions設定（設定ファイルからリージョンを取得）
 const functions = createFunctionsInstance(app);
 
-// 開発環境でエミュレータを使用する場合のみ
+// Development environment: connect to emulator if specified
 if (import.meta.env.DEV && import.meta.env.VITE_USE_EMULATOR === 'true') {
   connectFunctionsEmulator(functions, 'localhost', 5001);
 }
 
-// Cloud Functions参照
+// Cloud Functions references
 const getFanzaVideos = httpsCallable(functions, 'getFanzaVideos');
 const healthCheck = httpsCallable(functions, 'healthCheck');
 
-// APIレート制限インスタンス
+// API rate limiting
 const rateLimiter = new ApiRateLimiter();
 
-// ===== 動画URL生成関数 =====
-const generateDirectVideoUrl = (content_id) => {
-  // FANZAの直接動画URLパターン
-  const patterns = [
-    `https://cc3001.dmm.co.jp/litevideo/freepv/${content_id.slice(0,1)}/${content_id.slice(0,3)}/${content_id}/${content_id}_mhb_w.mp4`,
-    `https://cc3001.dmm.co.jp/litevideo/freepv/${content_id.slice(0,1)}/${content_id.slice(0,3)}/${content_id}/${content_id}_dmb_w.mp4`,
-    `https://cc3001.dmm.co.jp/litevideo/freepv/${content_id.slice(0,1)}/${content_id.slice(0,3)}/${content_id}/${content_id}_sm_w.mp4`
-  ];
-  // 最初のパターンを返す（他のパターンはフォールバック用）
-  return patterns[0];
-};
 
-const generateIframeUrl = (content_id) => {
-  // iframe埋め込み用URL
-  return `https://www.dmm.co.jp/litevideo/-/player/=/title=player/cid=${content_id}/`;
-};
-
-// デモデータ
- const DEMO_VIDEOS = [
+// ============================================================================
+// DEMO DATA
+// ============================================================================
+const DEMO_VIDEOS = [
   {
     id: 'demo1',
     title: 'サンプル動画 1',
@@ -105,28 +94,38 @@ const generateIframeUrl = (content_id) => {
   }
 ];
 
+// ============================================================================
+// MAIN COMPONENT
+// ============================================================================
 const FanzaSwipeApp = () => {
-  // ===== 状態管理 =====
+  // ============================================================================
+  // STATE MANAGEMENT
+  // ============================================================================
+  // UI State
   const [user, setUser] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
-  // const [currentVideoIndex, setCurrentVideoIndex] = useState(0); // VideoSwiperコンポーネントで管理
-  const [videos, setVideos] = useState([]); // 初期値は空配列
-  const [loading, setLoading] = useState(true); // 初期状態はローディング中
+  const [showSearch, setShowSearch] = useState(false);
+  const [showProductDetails, setShowProductDetails] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [loading, setLoading] = useState(true);
+  
+  // Video State
+  const [videos, setVideos] = useState([]);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
-  const [isLandscape, setIsLandscape] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [onboardingVideos] = useState([]);
+  
+  // User Preferences & Behavior
   const [userPreferences, setUserPreferences] = useState({
     genres: [],
     actresses: [],
     duration: 'all',
     quality: 'high'
   });
-  const [showOnboarding, setShowOnboarding] = useState(false);
-  const [onboardingVideos, setOnboardingVideos] = useState([]);
-  const [showSearch, setShowSearch] = useState(false);
-  const [showProductDetails, setShowProductDetails] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [userBehavior, setUserBehavior] = useState(() => {
-    // localStorageから行動データを読み込み
+  
+  // Device State
+  const [, setIsLandscape] = useState(false);
+  const [_userBehavior, setUserBehavior] = useState(() => {
     const savedBehavior = localStorage.getItem('fanza_user_behavior');
     return savedBehavior ? JSON.parse(savedBehavior) : {
       preferredGenres: {},
@@ -135,17 +134,23 @@ const FanzaSwipeApp = () => {
       skipPatterns: []
     };
   });
+  
+  // API State
+  const [apiError, setApiError] = useState(null);
+  const [offset, setOffset] = useState(1);
+  const [searchKeyword, setSearchKeyword] = useState('');
+  const [keywordOffset, setKeywordOffset] = useState(1);
+  
+  // Revenue tracking (for analytics)
   const [_revenue, setRevenue] = useState({
     clickThroughs: 0,
     adViews: 0,
     totalEarnings: 0
   });
-  const [apiError, setApiError] = useState(null);
-  const [offset, setOffset] = useState(1);
-  const [searchKeyword, setSearchKeyword] = useState('');
-  const [keywordOffset, setKeywordOffset] = useState(1);
 
-  // ===== Cloud Functions API呼び出し関数 =====
+  // ============================================================================
+  // API FUNCTIONS
+  // ============================================================================
   const fetchFanzaVideos = async (params = {}, retryCount = 0) => {
     try {
       setLoading(true);
@@ -252,7 +257,7 @@ const FanzaSwipeApp = () => {
     });
   };
 
-  // ===== ヘルスチェック関数 =====
+  // Health check function
   const checkApiHealth = async () => {
     try {
       const result = await healthCheck();
@@ -265,7 +270,10 @@ const FanzaSwipeApp = () => {
     }
   };
 
-  // ===== 横画面検出 =====
+  // ============================================================================
+  // EFFECTS & EVENT HANDLERS
+  // ============================================================================
+  // Device orientation detection
   useEffect(() => {
     const handleOrientationChange = () => {
       setIsLandscape(window.innerWidth > window.innerHeight);
@@ -284,32 +292,31 @@ const FanzaSwipeApp = () => {
     };
   }, []);
 
-  // ===== 動画変更の処理 =====
+  // Video change handler
   const handleVideoChangeWithIndex = (index) => {
     setCurrentVideoIndex(index);
     handleVideoChange(index);
   };
 
-  // ===== 初期化 =====
+  // App initialization
   useEffect(() => {
     const initializeApp = async () => {
       
-      // まずAPIの状態をチェック
-      const health = await checkApiHealth();
+      // Check API health
+      await checkApiHealth();
       
-      // 初期動画データの読み込み（Cloud Functions経由）
+      // Load initial video data
       const randomOffset = Math.floor(Math.random() * 100) * 10 + 1;
       const initialVideos = await fetchFanzaVideos({ offset: randomOffset });
       
-      // APIが成功した場合のみ動画を設定
       if (initialVideos.length > 0) {
         setVideos(initialVideos);
       }
       
-      // オンボーディングは無効化
+      // Disable onboarding for now
       setShowOnboarding(false);
 
-      // ユーザー設定の復元
+      // Restore user preferences
       const savedPrefs = localStorage.getItem('fanza_user_preferences');
       if (savedPrefs) {
         setUserPreferences(JSON.parse(savedPrefs));
@@ -320,14 +327,16 @@ const FanzaSwipeApp = () => {
         setUser(JSON.parse(savedUser));
       }
       
-      // 古いキャッシュをクリーンアップ
+      // Clean up old cache
       rateLimiter.clearOldCache();
     };
 
     initializeApp();
-  }, []); // 依存配列を空にして無限ループを防止
+  }, []); // eslintエラー修正
 
-  // ===== ユーザー行動分析 =====
+  // ============================================================================
+  // USER BEHAVIOR FUNCTIONS
+  // ============================================================================
   const updateUserBehavior = (action, data) => {
     setUserBehavior(prev => {
       const updated = { ...prev };
@@ -359,52 +368,10 @@ const FanzaSwipeApp = () => {
     });
   };
 
-  // ===== レコメンド機能 =====
-  const getRecommendedVideos = async () => {
-    // ジャンルと女優の好みを統合
-    const topGenres = Object.entries(userBehavior.preferredGenres || {})
-      .sort(([,a], [,b]) => b - a)
-      .slice(0, 3)
-      .map(([genre]) => genre);
-    
-    const topActresses = Object.entries(userBehavior.preferredActresses || {})
-      .sort(([,a], [,b]) => b - a)
-      .slice(0, 3)
-      .map(([actress]) => actress);
 
-    // オンボーディングの好みも含める
-    const onboardingGenres = userPreferences.genres || [];
-    const onboardingActresses = userPreferences.actresses || [];
-    
-    // すべての好みを統合
-    const allPreferredGenres = [...new Set([...topGenres, ...onboardingGenres])];
-    const allPreferredActresses = [...new Set([...topActresses, ...onboardingActresses])];
-    
-    // 検索キーワードを作成（ジャンルと女優を組み合わせる）
-    const searchKeywords = [];
-    if (allPreferredGenres.length > 0) {
-      searchKeywords.push(allPreferredGenres[0]);
-    }
-    if (allPreferredActresses.length > 0) {
-      searchKeywords.push(allPreferredActresses[0]);
-    }
-    
-    if (searchKeywords.length > 0) {
-      const recommendedVideos = await fetchFanzaVideos({
-        keyword: searchKeywords.join(' '),  // encodeURIComponentは buildFanzaApiUrl で行われる
-        offset: Math.floor(Math.random() * 10) + 1 // ランダムなオフセットで多様性を確保
-      });
-      
-      if (recommendedVideos.length > 0) {
-        return recommendedVideos;
-      }
-    }
-
-    // 好みがない場合は通常の動画を取得
-    return await fetchFanzaVideos();
-  };
-
-  // ===== 動画操作 =====
+  // ============================================================================
+  // VIDEO FUNCTIONS
+  // ============================================================================
   const handleVideoChange = (index) => {
     // setCurrentVideoIndex(index);
     if (videos[index]) {
@@ -450,7 +417,9 @@ const FanzaSwipeApp = () => {
     }
   };
 
-  // ===== オンボーディング =====
+  // ============================================================================
+  // ONBOARDING & SEARCH FUNCTIONS
+  // ============================================================================
   const handleOnboardingComplete = (preferences) => {
     setUserPreferences(preferences);
     localStorage.setItem('fanza_user_preferences', JSON.stringify(preferences));
@@ -465,7 +434,6 @@ const FanzaSwipeApp = () => {
     // });
   };
 
-  // ===== 検索機能 =====
   const handleSearchSelect = (video) => {
     setVideos([video, ...videos.filter(v => v.id !== video.id)]);
     // setCurrentVideoIndex(0);
@@ -482,7 +450,9 @@ const FanzaSwipeApp = () => {
     setShowSearch(false);
   };
 
-  // ===== その他の機能 =====
+  // ============================================================================
+  // UI COMPONENT FUNCTIONS
+  // ============================================================================
   const handleProductClick = (video) => {
     setSelectedProduct(video);
     setShowProductDetails(true);
@@ -500,7 +470,9 @@ const FanzaSwipeApp = () => {
     }
   };
 
-  // ===== UI コンポーネント =====
+  // ============================================================================
+  // RENDER FUNCTIONS
+  // ============================================================================
   const LoadingScreen = () => (
     <div className="h-screen bg-black flex items-center justify-center">
       <div className="text-white text-center">
@@ -516,10 +488,14 @@ const FanzaSwipeApp = () => {
     </div>
   );
 
-  // 動画が存在しない場合はローディング画面を表示
+  // Show loading screen if no videos are available
   if (!videos || videos.length === 0) {
     return <LoadingScreen />;
   }
+
+  // ============================================================================
+  // MAIN RENDER
+  // ============================================================================
 
   return (
     <div className="h-screen bg-black">
@@ -540,7 +516,7 @@ const FanzaSwipeApp = () => {
             loading={loading}
           />
           
-          {/* 検索パネル */}
+          {/* Search Panel */}
           {showSearch && (
             <SearchPanel
               onSearch={searchFanzaVideos}
@@ -553,7 +529,7 @@ const FanzaSwipeApp = () => {
             />
           )}
           
-          {/* 商品詳細モーダル */}
+          {/* Product Details Modal */}
           {showProductDetails && selectedProduct && (
             <ProductDetailsModal
               video={selectedProduct}
@@ -562,7 +538,7 @@ const FanzaSwipeApp = () => {
             />
           )}
           
-          {/* 設定パネル */}
+          {/* Settings Panel */}
           {showSettings && (
             <SettingsPanel
               user={user}
@@ -576,7 +552,7 @@ const FanzaSwipeApp = () => {
             />
           )}
 
-          {/* ヘッダーナビゲーション */}
+          {/* Header Navigation */}
           <div className="absolute top-0 left-0 right-0 p-4 bg-gradient-to-b from-black/80 to-transparent pointer-events-none">
             <div className="flex justify-between items-center pointer-events-auto">
               <div className="flex items-center space-x-2">
@@ -600,7 +576,7 @@ const FanzaSwipeApp = () => {
                 >
                   <Search className="w-5 h-5 text-white" />
                 </button>
-                {/* 詳細ボタン（縦画面・横画面共通） */}
+                {/* Details button */}
                 {videos[currentVideoIndex] && (
                   <button
                     onClick={() => handleProductClick(videos[currentVideoIndex])}
