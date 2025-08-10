@@ -161,6 +161,18 @@ const VideoSwiper = ({
     if (!container) return;
 
     const handleScroll = () => {
+      // 5件毎制限: ボタンが表示されている間はスクロールを制限
+      if (showLoadMoreButton && hasMoreVideos) {
+        // 現在のスクロール位置を5件目で固定
+        const maxScrollIndex = Math.floor(currentIndex / 5) * 5 + 4; // 5, 10, 15...の位置で停止
+        const maxScrollTop = maxScrollIndex * container.clientHeight;
+        
+        if (container.scrollTop > maxScrollTop) {
+          container.scrollTop = maxScrollTop;
+          return; // スクロールを制限
+        }
+      }
+      
       const scrollTop = container.scrollTop;
       const containerHeight = container.clientHeight;
       const newIndex = Math.round(scrollTop / containerHeight);
@@ -252,6 +264,12 @@ const VideoSwiper = ({
 
   // Pull-to-refresh functionality
   const handleTouchStart = (e) => {
+    // 5件毎制限: ボタンが表示されている間はタッチ操作を制限
+    if (showLoadMoreButton && hasMoreVideos) {
+      e.preventDefault();
+      return;
+    }
+    
     if (currentIndex === videos.length - 1 && hasViewedAll) {
       setStartY(e.touches[0].clientY);
       setIsPulling(true);
@@ -259,6 +277,12 @@ const VideoSwiper = ({
   };
 
   const handleTouchMove = (e) => {
+    // 5件毎制限: ボタンが表示されている間はタッチ移動を制限
+    if (showLoadMoreButton && hasMoreVideos) {
+      e.preventDefault();
+      return;
+    }
+    
     if (!isPulling || isLoadingMore) return;
     
     const currentY = e.touches[0].clientY;
@@ -276,6 +300,11 @@ const VideoSwiper = ({
   };
 
   const handleTouchEnd = () => {
+    // 5件毎制限: ボタンが表示されている間はタッチ終了操作を制限
+    if (showLoadMoreButton && hasMoreVideos) {
+      return;
+    }
+    
     if (!isPulling || isLoadingMore) return;
     
     setIsPulling(false);

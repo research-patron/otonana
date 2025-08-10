@@ -159,35 +159,173 @@ const saveVideoToFirestore = async (video) => {
   }
 };
 
-// Get videos from Firestore
+// Get videos from Firestore with year-based prioritization
 const getVideosFromFirestore = async (limit = 20, offset = 0, keyword = null) => {
   try {
-    let query = db.collection(DUGA_VIDEOS_COLLECTION)
-      .orderBy('lastUpdated', 'desc');
+    // 2023年以降の動画を優先的に取得
+    const currentYear = new Date().getFullYear();
+    const targetYear = 2023;
     
-    // Add keyword search if provided
-    if (keyword) {
-      // Firestore doesn't support full-text search, so we'll do a simple title search
-      // For better search, consider using Algolia or similar
-      query = query.where('title', '>=', keyword)
-                  .where('title', '<', keyword + '\uf8ff');
+    let recentVideos = [];
+    let olderVideos = [];
+    
+    // まず2023年以降の動画を取得
+    try {
+      let recentQuery = db.collection(DUGA_VIDEOS_COLLECTION);
+      
+      // キーワード検索がある場合は適用
+      if (keyword) {
+        recentQuery = recentQuery.where('title', '>=', keyword)
+                                .where('title', '<', keyword + '\uf8ff');
+      }
+      
+      // 2023年以降のデータを取得（releaseYearフィールドを優先）
+      let recentSnapshot;
+      try {
+        // まずreleaseYearフィールドで試す
+        recentSnapshot = await recentQuery
+          .where('releaseYear', '>=', targetYear)
+          .orderBy('releaseYear', 'desc')
+          .orderBy('lastUpdated', 'desc')
+          .limit(Math.min(limit * 2, 60))
+          .get();
+      } catch (yearFieldError) {
+        // releaseYearフィールドがない場合はreleaseDateで試す
+        logger.info('releaseYear field not available, falling back to releaseDate');
+        recentSnapshot = await recentQuery
+          .where('releaseDate', '>=', `${targetYear}-01-01`)
+          .orderBy('releaseDate', 'desc')
+          .orderBy('lastUpdated', 'desc')
+          .limit(Math.min(limit * 2, 60))
+          .get();
+      }
+      
+      recentSnapshot.forEach(doc => {
+        const data = doc.data();
+        // 年代フィルタリング：releaseDate または opendate から年を抽出
+        const releaseYear = extractYearFromDate(data.releaseDate || data.opendate);
+        if (releaseYear >= targetYear) {
+          recentVideos.push(data);
+        }
+      });
+      
+      logger.info(`Found ${recentVideos.length} videos from ${targetYear}+`);
+    } catch (recentError) {
+      logger.warn('Could not filter by recent years, falling back to general query:', recentError);
     }
     
-    const snapshot = await query
-      .limit(limit)
-      .offset(offset)
-      .get();
+    // 2023年以降の動画が十分でない場合、古い動画も取得
+    const remainingLimit = limit - recentVideos.length;
+    if (remainingLimit > 0) {
+      try {
+        let olderQuery = db.collection(DUGA_VIDEOS_COLLECTION)
+          .orderBy('lastUpdated', 'desc');
+        
+        if (keyword) {
+          olderQuery = olderQuery.where('title', '>=', keyword)
+                                .where('title', '<', keyword + '\uf8ff');
+        }
+        
+        let olderSnapshot;
+        try {
+          // releaseYearフィールドがあれば使用
+          olderSnapshot = await olderQuery
+            .where('releaseYear', '<', targetYear)
+            .limit(Math.min(remainingLimit * 2, 40))
+            .offset(offset)
+            .get();
+        } catch (yearFieldError) {
+          // releaseYearフィールドがない場合は通常のクエリ
+          olderSnapshot = await olderQuery
+            .limit(Math.min(remainingLimit * 2, 40))
+            .offset(offset)
+            .get();
+        }
+        
+        olderSnapshot.forEach(doc => {
+          const data = doc.data();
+          // 重複を避け、2023年以前のもののみ追加
+          const releaseYear = data.releaseYear || extractYearFromDate(data.releaseDate || data.opendate);
+          if (!recentVideos.find(v => v.id === data.id) && (!releaseYear || releaseYear < targetYear)) {
+            olderVideos.push(data);
+          }
+        });
+        
+        logger.info(`Found ${olderVideos.length} older videos as fallback`);
+      } catch (olderError) {
+        logger.warn('Error getting older videos:', olderError);
+      }
+    }
     
-    const videos = [];
-    snapshot.forEach(doc => {
-      videos.push(doc.data());
-    });
+    // 2023年以降の動画を優先し、不足分を古い動画で補完
+    const allVideos = [...recentVideos, ...olderVideos];
     
-    logger.info(`Retrieved ${videos.length} videos from Firestore`);
-    return videos;
+    // 動画配列をシャッフル（ただし新しい動画を上位に保持する重み付きランダム）
+    const prioritizedVideos = [...recentVideos.sort(() => Math.random() - 0.5)];
+    const shuffledOlderVideos = olderVideos.sort(() => Math.random() - 0.5);
+    
+    // 新しい動画70%、古い動画30%の比率で混合
+    const finalVideos = [];
+    const recentRatio = 0.7;
+    const targetRecentCount = Math.floor(limit * recentRatio);
+    
+    finalVideos.push(...prioritizedVideos.slice(0, Math.min(targetRecentCount, prioritizedVideos.length)));
+    const remainingSlots = limit - finalVideos.length;
+    finalVideos.push(...shuffledOlderVideos.slice(0, remainingSlots));
+    
+    // 最終的にシャッフル（軽く）
+    const resultVideos = finalVideos.sort(() => Math.random() - 0.3).slice(0, limit);
+    
+    logger.info(`Retrieved ${resultVideos.length} videos: ${recentVideos.length} recent (${targetYear}+), ${olderVideos.length} older`);
+    return resultVideos;
   } catch (error) {
     logger.error('Error getting videos from Firestore:', error);
-    return [];
+    
+    // エラー時のフォールバック: シンプルなクエリ
+    try {
+      let fallbackQuery = db.collection(DUGA_VIDEOS_COLLECTION)
+        .orderBy('lastUpdated', 'desc');
+      
+      if (keyword) {
+        fallbackQuery = fallbackQuery.where('title', '>=', keyword)
+                                    .where('title', '<', keyword + '\uf8ff');
+      }
+      
+      const fallbackSnapshot = await fallbackQuery
+        .limit(Math.min(limit * 2, 50))
+        .offset(offset)
+        .get();
+      
+      const fallbackVideos = [];
+      fallbackSnapshot.forEach(doc => {
+        fallbackVideos.push(doc.data());
+      });
+      
+      return fallbackVideos.sort(() => Math.random() - 0.5).slice(0, limit);
+    } catch (fallbackError) {
+      logger.error('Fallback query also failed:', fallbackError);
+      return [];
+    }
+  }
+};
+
+// Helper function to extract year from date string
+const extractYearFromDate = (dateStr) => {
+  if (!dateStr) return null;
+  
+  try {
+    // Handle various date formats: YYYY-MM-DD, YYYY/MM/DD, YYYY年MM月DD日, etc.
+    const yearMatch = dateStr.toString().match(/(\d{4})/);
+    if (yearMatch) {
+      const year = parseInt(yearMatch[1]);
+      // Reasonable year range check
+      if (year >= 2000 && year <= new Date().getFullYear() + 1) {
+        return year;
+      }
+    }
+    return null;
+  } catch (error) {
+    return null;
   }
 };
 
@@ -462,6 +600,20 @@ exports.getDugaVideos = onCall(
         return {success: true, data: demoVideos, source: 'demo'};
       }
 
+      // ランダムオフセット生成（固定取得を防ぐため）+ 2023年以降の動画を優先
+      let randomOffset;
+      
+      // 70%の確率で新しいコンテンツ範囲（0-200）、30%の確率で全範囲（0-1000）
+      if (Math.random() < 0.7) {
+        // 新しいコンテンツ優先: より小さなオフセット
+        randomOffset = Math.floor(Math.random() * 200) + 1;
+      } else {
+        // 全体からランダム
+        randomOffset = Math.floor(Math.random() * 1000) + 1;
+      }
+      
+      const actualOffset = offset === 1 ? randomOffset : offset;
+      
       // APIパラメータ構築 - DUGA API仕様に合わせて
       const params = {
         version: DUGA_CONFIG.VERSION,
@@ -472,7 +624,7 @@ exports.getDugaVideos = onCall(
         adult: DUGA_CONFIG.ADULT,
         sort: DUGA_CONFIG.SORT,
         hits: Math.min(hits, DUGA_CONFIG.LIMIT),
-        offset: Math.max(offset, 1) // DUGA APIは1から開始
+        offset: Math.max(actualOffset, 1) // ランダムオフセットを使用
       };
 
       if (keyword) {
@@ -566,7 +718,10 @@ exports.getDugaVideos = onCall(
             type: safeGet(item, 'saletype.data.0.type', '通常版'),
             ranking: rankingTotal ? parseInt(rankingTotal) : null,
             description: item.caption || '',
-            releaseDate: item.opendate || null
+            releaseDate: item.opendate || item.releasedate || null,
+            opendate: item.opendate || null, // Keep both fields for compatibility
+            // Extract and normalize year for better filtering
+            releaseYear: extractYearFromDate(item.opendate || item.releasedate) || new Date().getFullYear()
           };
         } catch (error) {
           logger.error('Error mapping DUGA item:', error, 'Item:', JSON.stringify(item, null, 2));

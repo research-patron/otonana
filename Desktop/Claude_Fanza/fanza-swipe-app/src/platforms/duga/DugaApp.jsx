@@ -210,6 +210,11 @@ const DugaApp = () => {
     setCurrentVideoIndex(newIndex);
     setTotalVideosViewed(Math.max(totalVideosViewed, newIndex + 1));
     
+    // Debug logging for button visibility (minimal)
+    if (!videos[newIndex]) {
+      console.warn('DUGA: No video at index', newIndex);
+    }
+    
     // Show "Load More" button every 5 videos (FANZA版と同様)
     const shouldShowButton = (newIndex + 1) % 5 === 0 && hasMoreVideos;
     setShowLoadMoreButton(shouldShowButton);
@@ -239,6 +244,28 @@ const DugaApp = () => {
   const handleProductClick = (video) => {
     setSelectedProduct(video);
     setShowProductModal(true);
+  };
+
+  const handleProductPurchase = () => {
+    if (selectedProduct?.productUrl || selectedProduct?.iframeUrl) {
+      // DUGAアフィリエイトリンクを使用（productUrlまたはiframeUrl）
+      const affiliateUrl = selectedProduct.productUrl || selectedProduct.iframeUrl;
+      window.open(affiliateUrl, '_blank');
+      
+      // 収益トラッキング（FANZA版と同様）
+      console.log('DUGA affiliate click tracked:', {
+        productId: selectedProduct.id,
+        title: selectedProduct.title,
+        price: selectedProduct.price,
+        affiliateUrl: affiliateUrl
+      });
+    } else {
+      // フォールバック: 直接DUGAサイトへ
+      window.open(`https://duga.jp/ppv/${selectedProduct?.id || ''}`, '_blank');
+    }
+    
+    // モーダルを閉じる
+    setShowProductModal(false);
   };
 
   // ============================================================================
@@ -271,6 +298,17 @@ const DugaApp = () => {
                   >
                     <Search size={20} />
                   </button>
+                  {/* Details button */}
+                  {videos[currentVideoIndex] && (
+                    <button
+                      onClick={() => handleProductClick(videos[currentVideoIndex])}
+                      className="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-full transition-colors flex items-center space-x-2"
+                      aria-label="作品詳細"
+                    >
+                      <Info className="w-4 h-4 text-white" />
+                      <span className="text-white text-sm">作品詳細</span>
+                    </button>
+                  )}
                   <button
                     onClick={() => setShowSettingsPanel(true)}
                     className="p-2 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
@@ -301,6 +339,7 @@ const DugaApp = () => {
                     loading={isLoading}
                     showLoadMoreButton={showLoadMoreButton}
                     hasMoreVideos={hasMoreVideos}
+                    platform="duga"
                   />
                 ) : (
                   <div className="flex items-center justify-center h-screen">
@@ -342,8 +381,9 @@ const DugaApp = () => {
             {/* Modals and Panels */}
             {showProductModal && selectedProduct && (
               <ProductDetailsModal
-                product={selectedProduct}
+                video={selectedProduct}
                 onClose={() => setShowProductModal(false)}
+                onPurchase={handleProductPurchase}
                 platform="duga"
                 themeColor="purple"
               />

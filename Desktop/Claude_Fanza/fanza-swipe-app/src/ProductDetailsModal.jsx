@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-const ProductDetailsModal = ({ video, onClose, onPurchase }) => {
+const ProductDetailsModal = ({ video, onClose, onPurchase, platform = 'fanza', themeColor = 'black' }) => {
   // Escapeキーでモーダルを閉じる
   useEffect(() => {
     if (!video) return;
@@ -21,6 +21,30 @@ const ProductDetailsModal = ({ video, onClose, onPurchase }) => {
   const originalPrice = parseInt(video.originalPrice.replace('¥', '').replace(',', ''));
   const currentPrice = parseInt(video.price.replace('¥', '').replace(',', ''));
   const discount = Math.round(((originalPrice - currentPrice) / originalPrice) * 100);
+  
+  // プラットフォーム固有設定
+  const platformConfig = {
+    fanza: {
+      siteName: 'FANZA',
+      buttonColor: 'bg-black hover:bg-gray-800',
+      accentColor: 'text-red-600'
+    },
+    duga: {
+      siteName: 'DUGA',
+      buttonColor: 'bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700',
+      accentColor: 'text-purple-600'
+    }
+  };
+  
+  const config = {
+    ...platformConfig[platform] || platformConfig.fanza,
+    buttonColor: themeColor === 'black' ? 'bg-black hover:bg-gray-800' :
+                themeColor === 'purple' ? 'bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700' :
+                'bg-black hover:bg-gray-800',
+    accentColor: themeColor === 'black' ? 'text-red-600' :
+                 themeColor === 'purple' ? 'text-purple-600' :
+                 'text-red-600'
+  };
 
   return (
     <div 
@@ -70,7 +94,7 @@ const ProductDetailsModal = ({ video, onClose, onPurchase }) => {
             <div className="flex items-center justify-between">
               <div>
                 <div className="flex items-center space-x-2">
-                  <span className="text-2xl font-bold text-red-600">{video.price}</span>
+                  <span className={`text-2xl font-bold ${config.accentColor}`}>{video.price}</span>
                   {isOnSale && (
                     <span className="text-sm text-gray-500 line-through">{video.originalPrice}</span>
                   )}
@@ -98,13 +122,13 @@ const ProductDetailsModal = ({ video, onClose, onPurchase }) => {
 
           <button
             onClick={onPurchase}
-            className="w-full bg-black text-white py-4 rounded-lg font-bold text-lg hover:bg-gray-800 transition-colors"
+            className={`w-full text-white py-4 rounded-lg font-bold text-lg transition-colors ${config.buttonColor}`}
           >
             今すぐ購入する
           </button>
           
           <p className="text-xs text-gray-500 text-center mt-2">
-            ※外部サイト(FANZA)に移動します
+            ※外部サイト({config.siteName})に移動します
           </p>
         </div>
       </div>
