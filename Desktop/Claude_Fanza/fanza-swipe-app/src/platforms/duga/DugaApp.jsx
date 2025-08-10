@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Settings, Info } from 'lucide-react';
+import { Search, Settings, Info, MoreVertical } from 'lucide-react';
 import { httpsCallable, connectFunctionsEmulator } from 'firebase/functions';
 import { initializeApp } from 'firebase/app';
 import { Routes, Route } from 'react-router-dom';
@@ -108,6 +108,9 @@ const DugaApp = () => {
   const [currentOffset, setCurrentOffset] = useState(1);
   const [showLoadMoreButton, setShowLoadMoreButton] = useState(false);
   const [totalVideosViewed, setTotalVideosViewed] = useState(0);
+  
+  // Search state (for header display)
+  const [searchKeyword, setSearchKeyword] = useState('');
 
   // ============================================================================
   // API FUNCTIONS
@@ -173,16 +176,15 @@ const DugaApp = () => {
         setIsLoading(true);
         setError(null);
         
-        // Start with demo videos
-        setVideos(DEMO_VIDEOS);
-        setInitialized(true);
-        
-        // Try to fetch real videos in background (but don't block UI)
+        // Fetch real videos first (don't start with demo videos)
         try {
           await fetchDugaVideos({ replace: true, offset: 1, hits: 5 });
+          setInitialized(true);
         } catch (apiError) {
           console.warn('Could not fetch DUGA videos, using demo data:', apiError);
-          // Keep demo videos as fallback
+          // Use demo videos as fallback only if API fails
+          setVideos(DEMO_VIDEOS);
+          setInitialized(true);
         }
       } catch (initError) {
         console.error('App initialization error:', initError);
@@ -196,6 +198,24 @@ const DugaApp = () => {
       initializeDugaApp();
     }
   }, [initialized]);
+
+  // ============================================================================
+  // UI COMPONENTS
+  // ============================================================================
+  const LoadingScreen = () => (
+    <div className="h-screen bg-gradient-to-br from-purple-900 via-indigo-900 to-purple-900 flex items-center justify-center">
+      <div className="text-white text-center">
+        <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-purple-400 mx-auto mb-4"></div>
+        <p className="text-lg mb-2">動画を読み込み中...</p>
+        <p className="text-sm text-gray-300">少々お待ちください</p>
+        {error && (
+          <div className="mt-4 p-4 bg-purple-800/50 rounded-lg max-w-md">
+            <p className="text-purple-200 text-sm">{error}</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 
   // ============================================================================
   // EVENT HANDLERS
@@ -234,8 +254,10 @@ const DugaApp = () => {
   };
 
   const handleSearch = (searchParams) => {
+    const keyword = searchParams.keyword;
+    setSearchKeyword(keyword);
     fetchDugaVideos({
-      keyword: searchParams.keyword,
+      keyword: keyword,
       genre: searchParams.genre,
       replace: true
     });
@@ -280,23 +302,29 @@ const DugaApp = () => {
         {/* メインアプリルート */}
         <Route path="/*" element={
           <>
-            {/* Header with DUGA branding */}
-            <div className="fixed top-0 left-0 right-0 z-30 bg-gradient-to-r from-purple-800/20 to-indigo-800/20 backdrop-blur-sm">
-              <div className="flex justify-between items-center p-4">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-lg flex items-center justify-center text-white font-bold text-sm">
-                    D
-                  </div>
-                  <span className="font-bold text-white text-lg">DUGA Swipe</span>
+            {/* Header Navigation */}
+            <div className="absolute top-0 left-0 right-0 p-4 bg-gradient-to-b from-black/80 to-transparent pointer-events-none">
+              <div className="flex justify-between items-center pointer-events-auto">
+                <div className="flex items-center space-x-2">
+                  <button 
+                    onClick={() => {
+                      if (searchKeyword) {
+                        setSearchKeyword('');
+                        // Clear search and reload
+                        fetchDugaVideos({ replace: true, offset: 1, hits: 5 });
+                      }
+                    }}
+                    className="text-white/80 text-sm hover:text-white transition-colors"
+                  >
+                    {searchKeyword ? `${searchKeyword} ✕` : 'すべて'}
+                  </button>
                 </div>
-                
-                <div className="flex gap-3">
+                <div className="flex items-center space-x-4">
                   <button
                     onClick={() => setShowSearchPanel(true)}
-                    className="p-2 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
-                    aria-label="検索"
+                    className="bg-white/20 hover:bg-white/30 p-3 rounded-full transition-colors"
                   >
-                    <Search size={20} />
+                    <Search className="w-5 h-5 text-white" />
                   </button>
                   {/* Details button */}
                   {videos[currentVideoIndex] && (
@@ -311,12 +339,11 @@ const DugaApp = () => {
                   )}
                   <button
                     onClick={() => setShowSettingsPanel(true)}
-                    className="p-2 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
+                    className="bg-white/20 hover:bg-white/30 p-3 rounded-full transition-colors"
                     aria-label="設定"
                   >
-                    <Settings size={20} />
-                  </button>
-                </div>
+                    <MoreVertical className="w-5 h-5 text-white" />
+                  </button>              </div>
               </div>
             </div>
 
@@ -328,8 +355,11 @@ const DugaApp = () => {
                 brandColor="purple"
               />
             ) : (
-              <div className="pt-16">
-                {videos && Array.isArray(videos) && videos.length > 0 ? (
+              <>
+                {/* Show loading screen if no videos are available or still loading */}
+                {(!videos || videos.length === 0 || !initialized) ? (
+                  <LoadingScreen />
+                ) : (
                   <VideoSwiper
                     videos={videos}
                     currentIndex={Math.min(currentVideoIndex, videos.length - 1)}
@@ -341,13 +371,6 @@ const DugaApp = () => {
                     hasMoreVideos={hasMoreVideos}
                     platform="duga"
                   />
-                ) : (
-                  <div className="flex items-center justify-center h-screen">
-                    <div className="text-center text-white">
-                      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-400 mx-auto mb-4"></div>
-                      <p>{error || '動画を読み込み中...'}</p>
-                    </div>
-                  </div>
                 )}
                 
                 {error && (
@@ -362,7 +385,7 @@ const DugaApp = () => {
                     動画を読み込み中...
                   </div>
                 )}
-              </div>
+              </>
             )}
 
             {/* DUGA Credit */}

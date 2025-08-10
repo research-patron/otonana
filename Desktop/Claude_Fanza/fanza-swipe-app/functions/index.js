@@ -329,6 +329,52 @@ const extractYearFromDate = (dateStr) => {
   }
 };
 
+// Check if content contains scatology-related keywords
+const containsScatKeywords = (title, genre, description) => {
+  const scatKeywords = [
+    'スカトロ', 'scato', '排泄', '糞', 'うんち', 'ウンチ', 
+    '大便', '脱糞', 'scat', 'shit', 'poop', 'excrement'
+  ];
+  
+  const text = [title || '', genre || '', description || ''].join(' ').toLowerCase();
+  return scatKeywords.some(keyword => text.includes(keyword.toLowerCase()));
+};
+
+// Parse duration string to seconds
+const parseDurationInSeconds = (durationStr) => {
+  if (!durationStr) return 0;
+  
+  try {
+    // Handle formats like "45分", "1時間30分", "90分", etc.
+    const str = durationStr.toString();
+    
+    // Extract minutes
+    const minuteMatch = str.match(/(\d+)分/);
+    const hourMatch = str.match(/(\d+)時間/);
+    
+    let totalSeconds = 0;
+    
+    if (hourMatch) {
+      totalSeconds += parseInt(hourMatch[1]) * 3600; // hours to seconds
+    }
+    
+    if (minuteMatch) {
+      totalSeconds += parseInt(minuteMatch[1]) * 60; // minutes to seconds
+    } else if (!hourMatch) {
+      // If no specific format, try to extract any number and assume it's minutes
+      const numberMatch = str.match(/(\d+)/);
+      if (numberMatch) {
+        totalSeconds = parseInt(numberMatch[1]) * 60;
+      }
+    }
+    
+    return totalSeconds;
+  } catch (error) {
+    logger.warn('Duration parsing error:', error, 'for duration:', durationStr);
+    return 0;
+  }
+};
+
 // Get cached video count
 const getCachedVideoCount = async (keyword = null) => {
   try {
@@ -753,15 +799,43 @@ exports.getDugaVideos = onCall(
         }
       });
 
+      // Apply content filtering
+      const filteredItems = mappedItems.filter(item => {
+        try {
+          // Duration filter: exclude videos 30 seconds or less
+          const durationInSeconds = parseDurationInSeconds(item.duration);
+          if (durationInSeconds > 0 && durationInSeconds <= 30) {
+            logger.debug(`Filtered out short video: ${item.title} (${item.duration})`);
+            return false;
+          }
+          
+          // Scatology filter: only apply when no specific keyword is searched
+          if (!keyword) {
+            const genreText = Array.isArray(item.genre) ? item.genre.join(' ') : '';
+            if (containsScatKeywords(item.title, genreText, item.description)) {
+              logger.debug(`Filtered out inappropriate content: ${item.title}`);
+              return false;
+            }
+          }
+          
+          return true;
+        } catch (error) {
+          logger.warn('Error during content filtering:', error, 'for item:', item.title);
+          return true; // Keep item if filtering fails
+        }
+      });
+
+      logger.info(`Content filtering: ${mappedItems.length} -> ${filteredItems.length} videos`);
+
       // Save to cache (memory)
-      setCachedData(cacheKey, mappedItems);
+      setCachedData(cacheKey, filteredItems);
 
       // Save each video to Firestore for persistent caching
-      const savePromises = mappedItems.map(video => saveVideoToFirestore(video));
+      const savePromises = filteredItems.map(video => saveVideoToFirestore(video));
       await Promise.allSettled(savePromises);
 
-      logger.info(`Successfully processed ${mappedItems.length} DUGA videos`);
-      return {success: true, data: mappedItems, source: 'api'};
+      logger.info(`Successfully processed ${filteredItems.length} DUGA videos`);
+      return {success: true, data: filteredItems, source: 'api'};
 
     } catch (error) {
       logger.error('DUGA API request failed', error);

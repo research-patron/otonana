@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Settings, Info } from 'lucide-react';
+import { Search, Settings, Info, MoreVertical } from 'lucide-react';
 import { httpsCallable, connectFunctionsEmulator } from 'firebase/functions';
 import { initializeApp } from 'firebase/app';
 
@@ -549,6 +549,7 @@ const FanzaSwipeApp = () => {
                 setShowOnboarding(true);
                 setShowSettings(false);
               }}
+              platform="fanza"
             />
           )}
 
@@ -589,10 +590,10 @@ const FanzaSwipeApp = () => {
                 <button
                   onClick={() => setShowSettings(true)}
                   className="bg-white/20 hover:bg-white/30 p-3 rounded-full transition-colors"
+                  aria-label="設定"
                 >
-                  <Settings className="w-5 h-5 text-white" />
-                </button>
-              </div>
+                  <MoreVertical className="w-5 h-5 text-white" />
+                </button>              </div>
             </div>
           </div>
         </>
