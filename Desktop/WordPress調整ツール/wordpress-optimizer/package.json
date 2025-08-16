@@ -1,0 +1,48 @@
+{
+  "name": "wordpress-optimizer",
+  "private": true,
+  "version": "1.0.0",
+  "description": "WordPress記事最適化提案アプリケーション - AIを活用したWordPress記事作成支援ツール",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "start": "npm run dev"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/icons-material": "^5.18.0",
+    "@mui/material": "^5.18.0",
+    "@mui/x-date-pickers": "^8.10.0",
+    "@tinymce/tinymce-react": "^6.3.0",
+    "@types/crypto-js": "^4.2.2",
+    "@types/node": "^24.2.1",
+    "crypto-js": "^4.2.0",
+    "date-fns": "^4.1.0",
+    "firebase": "^12.1.0",
+    "mammoth": "^1.10.0",
+    "pdfjs-dist": "^5.4.54",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "react-dropzone": "^14.3.8",
+    "react-router-dom": "^7.8.0",
+    "tinymce": "^8.0.1",
+    "zustand": "^5.0.7"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.33.0",
+    "@types/react": "^19.1.10",
+    "@types/react-dom": "^19.1.7",
+    "@vitejs/plugin-react": "^5.0.0",
+    "eslint": "^9.33.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.20",
+    "globals": "^16.3.0",
+    "typescript": "~5.8.3",
+    "typescript-eslint": "^8.39.1",
+    "vite": "^7.1.2"
+  }
+}
