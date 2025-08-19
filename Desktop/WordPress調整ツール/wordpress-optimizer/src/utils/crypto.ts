@@ -10,10 +10,33 @@ const SECURE_SECRET = 'wp-optimizer-secure-advanced-key-2024';
 // APIキーの暗号化（基本）
 export const encryptApiKey = (apiKey: string): string => {
   try {
-    if (!apiKey) return '';
-    return CryptoJS.AES.encrypt(apiKey, CRYPTO_SECRET).toString();
+    if (!apiKey || apiKey.trim() === '') {
+      console.warn('Debug - encryptApiKey: Empty API key provided');
+      return '';
+    }
+
+    // APIキー形式の事前検証
+    if (!validateApiKeyFormat(apiKey)) {
+      console.warn('Debug - encryptApiKey: API key format validation failed');
+      console.warn('Debug - apiKey length:', apiKey.length);
+      console.warn('Debug - apiKey starts with:', apiKey.substring(0, 4));
+      // 警告は出すが処理は続行（形式が変更される可能性を考慮）
+    }
+
+    const encrypted = CryptoJS.AES.encrypt(apiKey, CRYPTO_SECRET).toString();
+    
+    // 暗号化結果の検証
+    if (!encrypted || encrypted.trim() === '') {
+      throw new Error('暗号化処理でエラーが発生しました');
+    }
+
+    console.log('Debug - encryptApiKey: Successfully encrypted API key');
+    console.log('Debug - original key length:', apiKey.length);
+    console.log('Debug - encrypted key length:', encrypted.length);
+    
+    return encrypted;
   } catch (error) {
-    console.error('Encryption failed:', error);
+    console.error('Debug - encryptApiKey failed:', error);
     throw new Error('APIキーの暗号化に失敗しました');
   }
 };
@@ -21,12 +44,46 @@ export const encryptApiKey = (apiKey: string): string => {
 // APIキーの復号化（基本）
 export const decryptApiKey = (encryptedKey: string): string => {
   try {
-    if (!encryptedKey) return '';
+    if (!encryptedKey || encryptedKey.trim() === '') {
+      console.warn('Debug - decryptApiKey: Empty encrypted key provided');
+      return '';
+    }
+
+    // 暗号化データの基本検証
+    if (!validateEncryptedData(encryptedKey)) {
+      console.error('Debug - decryptApiKey: Invalid encrypted data format');
+      throw new Error('暗号化データの形式が正しくありません');
+    }
+
     const bytes = CryptoJS.AES.decrypt(encryptedKey, CRYPTO_SECRET);
-    return bytes.toString(CryptoJS.enc.Utf8);
+    const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+    
+    // 復号化結果の検証
+    if (!decrypted || decrypted.trim() === '') {
+      console.error('Debug - decryptApiKey: Decryption resulted in empty string');
+      console.error('Debug - encryptedKey length:', encryptedKey.length);
+      console.error('Debug - encryptedKey (first 20 chars):', encryptedKey.substring(0, 20));
+      throw new Error('APIキーの復号化結果が空です。暗号化データが破損している可能性があります。');
+    }
+
+    // APIキー形式の検証
+    if (!validateApiKeyFormat(decrypted)) {
+      console.warn('Debug - decryptApiKey: Decrypted key format validation failed');
+      console.warn('Debug - decrypted key length:', decrypted.length);
+      console.warn('Debug - decrypted key starts with:', decrypted.substring(0, 4));
+    }
+
+    console.log('Debug - decryptApiKey: Successfully decrypted API key');
+    console.log('Debug - decrypted key length:', decrypted.length);
+    console.log('Debug - decrypted key starts with AIza:', decrypted.startsWith('AIza'));
+    
+    return decrypted;
   } catch (error) {
-    console.error('Decryption failed:', error);
-    throw new Error('APIキーの復号化に失敗しました');
+    console.error('Debug - decryptApiKey failed:', error);
+    if (error instanceof Error && error.message.includes('暗号化データ')) {
+      throw error; // 既に適切なエラーメッセージが設定されている場合はそのまま投げる
+    }
+    throw new Error('APIキーの復号化に失敗しました。設定画面でAPIキーを再入力してください。');
   }
 };
 

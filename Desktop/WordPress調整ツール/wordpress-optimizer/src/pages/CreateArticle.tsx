@@ -6,15 +6,25 @@ import {
   Snackbar,
   CircularProgress,
   Backdrop,
+  Box,
+  Card,
+  CardContent,
+  Typography,
+  LinearProgress,
 } from '@mui/material';
+import StepWizard, { type StepType } from '../components/creation/StepWizard';
+import InputSelector, { type InputMode } from '../components/creation/InputSelector';
+import CategorySelector from '../components/creation/CategorySelector';
+import CSVGenerationStep from '../components/creation/CSVGenerationStep';
+import AIResultDisplay from '../components/creation/AIResultDisplay';
 import ArticleEditor from '../components/editor/ArticleEditor';
-import AIResultReview from '../components/ai/AIResultReview';
-import { useAppStore, useDraftStore, useAnalysisStore, useSuggestionStore, useStatsStore } from '../store';
+import { useAppStore, useDraftStore, useAnalysisStore, useSuggestionStore } from '../store';
 import { analyzeSite, createPost } from '../services/wordpress';
-import { generateArticleSuggestions } from '../services/gemini';
+import { generateArticleSuggestions, generateArticleSuggestionsStructured } from '../services/gemini';
+import { generateUltrathinkAISuggestion } from '../services/ultrathinkAI';
+import csvManager from '../services/csvManager';
 import { formatFullArticleToHTML, cleanupHTML } from '../utils/contentFormatter';
-import { addPromptHistory, linkArticleToPromptHistory } from '../services/promptHistory';
-import type { DraftArticle, WordPressCategory, WordPressTag, SiteAnalysis, PromptTemplate } from '../types';
+import type { DraftArticle, WordPressCategory, WordPressTag, SiteAnalysis, PromptTemplate, CSVManagerState, WordPressSite } from '../types';
 import type { FileProcessingResult } from '../services/fileProcessor';
 
 function CreateArticle() {
@@ -25,7 +35,6 @@ function CreateArticle() {
   const { addDraft, updateDraft } = useDraftStore();
   const { getAnalysis, setAnalysis } = useAnalysisStore();
   const { currentSuggestion, setSuggestion, setLoading, isLoading } = useSuggestionStore();
-  const { incrementApiCall, incrementArticleCount } = useStatsStore();
 
   // Local state
   const [categories, setCategories] = useState<WordPressCategory[]>([]);
@@ -35,11 +44,19 @@ function CreateArticle() {
   const [isPublishing, setIsPublishing] = useState(false);
   const [fileContent, setFileContent] = useState<FileProcessingResult | null>(null);
   
-  // AI提案結果表示モード
-  const [showAIResult, setShowAIResult] = useState(false);
+  // Ultrathink AI関連の状態
+  const [selectedCategoryIds, setSelectedCategoryIds] = useState<number[]>([]);
+  const [csvState, setCsvState] = useState<CSVManagerState | null>(null);
+  const [isGeneratingCSV, setIsGeneratingCSV] = useState(false);
+  const [csvError, setCsvError] = useState<string | null>(null);
+  const [currentSite, setCurrentSite] = useState<WordPressSite | null>(null);
+  
+  // ステップ管理
+  const [currentStep, setCurrentStep] = useState<StepType>('category-selection');
+  const [inputMode, setInputMode] = useState<InputMode>('none');
   const [originalInput, setOriginalInput] = useState('');
   const [currentDraft, setCurrentDraft] = useState<Partial<DraftArticle> | null>(null);
-  const [currentPromptHistoryId, setCurrentPromptHistoryId] = useState<string | null>(null);
+  const [generationProgress, setGenerationProgress] = useState(0);
 
   // 初期化処理
   useEffect(() => {
@@ -55,6 +72,9 @@ function CreateArticle() {
         return;
       }
 
+      // 現在のサイトを設定
+      setCurrentSite(currentSite);
+
       try {
         // キャッシュされた分析データを確認
         let analysis = getAnalysis(currentSite.id);
@@ -68,8 +88,23 @@ function CreateArticle() {
         setCurrentSiteAnalysis(analysis);
         setCategories(analysis.categories);
         setTags(analysis.tags);
-        
-        setAlert({ message: 'エディタの準備が完了しました', severity: 'success' });
+
+        // 既存のCSV状態を読み込み
+        const existingCsvState = csvManager.getCSVState(currentSite.id);
+        if (existingCsvState) {
+          setCsvState(existingCsvState);
+          setSelectedCategoryIds(existingCsvState.selectedCategoryIds);
+          
+          // 既存CSVがある場合は入力ステップから開始
+          if (existingCsvState.csvData.length > 0) {
+            setCurrentStep('input');
+            setAlert({ message: '既存の記事分析データを読み込みました。記事要求を入力してください。', severity: 'info' });
+          } else {
+            setAlert({ message: 'エディタの準備が完了しました。カテゴリーを選択してください。', severity: 'success' });
+          }
+        } else {
+          setAlert({ message: 'エディタの準備が完了しました。カテゴリーを選択してください。', severity: 'success' });
+        }
       } catch (error) {
         console.error('Site analysis failed:', error);
         setAlert({ message: 'サイト分析に失敗しました。サイト設定を確認してください。', severity: 'error' });
@@ -82,6 +117,93 @@ function CreateArticle() {
   const isAnalysisExpired = (analysis: SiteAnalysis): boolean => {
     const expireTime = 60 * 60 * 1000; // 1時間
     return Date.now() - new Date(analysis.analyzedAt).getTime() > expireTime;
+  };
+
+  // Ultrathink AI関連のハンドラー
+  const handleCategoryNext = () => {
+    if (selectedCategoryIds.length === 0) {
+      setAlert({ message: 'カテゴリーを選択してください', severity: 'error' });
+      return;
+    }
+    setCurrentStep('csv-generation');
+    
+    // 自動的にCSV生成を開始
+    handleGenerateCSV();
+  };
+
+  const handleGenerateCSV = async () => {
+    if (!currentSite) {
+      setAlert({ message: 'サイト情報が取得できません', severity: 'error' });
+      return;
+    }
+
+    setIsGeneratingCSV(true);
+    setCsvError(null);
+    
+    try {
+      const updatedState = await csvManager.updateCSVData(
+        currentSite,
+        selectedCategoryIds,
+        ['publish'], // 公開済み記事のみを対象
+        false // 増分更新
+      );
+      
+      setCsvState(updatedState);
+      setAlert({ message: `記事分析が完了しました（${updatedState.totalArticles}記事）`, severity: 'success' });
+    } catch (error) {
+      console.error('CSV generation failed:', error);
+      const errorMessage = error instanceof Error ? error.message : 'CSV生成に失敗しました';
+      setCsvError(errorMessage);
+      setAlert({ message: errorMessage, severity: 'error' });
+    } finally {
+      setIsGeneratingCSV(false);
+    }
+  };
+
+  const handleForceUpdateCSV = async () => {
+    if (!currentSite) return;
+    
+    setIsGeneratingCSV(true);
+    setCsvError(null);
+    
+    try {
+      const updatedState = await csvManager.updateCSVData(
+        currentSite,
+        selectedCategoryIds,
+        ['publish'],
+        true // 強制全体更新
+      );
+      
+      setCsvState(updatedState);
+      setAlert({ message: `記事データを強制更新しました（${updatedState.totalArticles}記事）`, severity: 'success' });
+    } catch (error) {
+      console.error('CSV force update failed:', error);
+      const errorMessage = error instanceof Error ? error.message : 'CSV更新に失敗しました';
+      setCsvError(errorMessage);
+      setAlert({ message: errorMessage, severity: 'error' });
+    } finally {
+      setIsGeneratingCSV(false);
+    }
+  };
+
+  const handleCSVNext = () => {
+    if (!csvState || csvState.csvData.length === 0) {
+      setAlert({ message: '記事データが生成されていません', severity: 'error' });
+      return;
+    }
+    setCurrentStep('input');
+  };
+
+  // CSV分析をやり直す
+  const handleRestartAnalysis = () => {
+    // CSV状態をクリア
+    setCsvState(null);
+    setSelectedCategoryIds([]);
+    setCsvError(null);
+    
+    // カテゴリー選択ステップに戻る
+    setCurrentStep('category-selection');
+    setAlert({ message: 'カテゴリー選択からやり直します', severity: 'info' });
   };
 
   // AI提案生成
@@ -101,92 +223,139 @@ function CreateArticle() {
 
     try {
       setLoading(true);
+      setGenerationProgress(20);
       
-      // 元の入力内容を保存
-      setOriginalInput(input);
-      
-      // プロンプトテンプレートを作成
-      let template: PromptTemplate | undefined = undefined;
-      
-      try {
-        // カスタムプロンプトが提供された場合はそれを使用、そうでなければ設定から取得
-        const systemPrompt = customPrompt || config.prompts?.system || '';
+      // CSVデータがある場合はUltrathink AIを使用
+      if (csvState && csvState.csvData.length > 0 && currentSite) {
+        console.log('Using Ultrathink AI with CSV data:', csvState.csvData.length, 'articles');
         
-        if (systemPrompt && systemPrompt.trim()) {
-          template = {
-            id: 'user_system_prompt',
-            name: 'システムプロンプト',
-            system: systemPrompt,
+        const selectedCategories = categories.filter(cat => selectedCategoryIds.includes(cat.id));
+        
+        const ultrathinkRequest = {
+          userInput: input,
+          csvData: csvState.csvData,
+          selectedCategories,
+          fileContent: fileContent ? {
+            text: fileContent.content.text,
+            filename: fileContent.filename,
+            wordCount: fileContent.content.wordCount,
+          } : undefined,
+          promptTemplate: customPrompt ? {
+            id: 'custom',
+            name: 'カスタムプロンプト',
+            system: customPrompt,
             tone: 'professional' as const,
             targetAudience: 'ユーザー設定',
             seoFocus: 8,
             purpose: 'information' as const,
-          };
-          console.log('Using system prompt template:', template);
-        } else {
-          console.log('No system prompt found, using default AI behavior');
-        }
-      } catch (error) {
-        console.error('Error creating prompt template:', error);
-        setAlert({ message: 'プロンプトテンプレートの作成に失敗しました', severity: 'error' });
-      }
-
-      const suggestion = await generateArticleSuggestions(
-        config.geminiApiKey,
-        config.selectedModel,
-        input,
-        currentSiteAnalysis || undefined,
-        template,
-        fileContent ? {
-          text: fileContent.content.text,
-          headings: fileContent.content.headings,
-          keywords: fileContent.content.keywords,
-          structure: fileContent.content.structure,
-        } : undefined
-      );
-
-      setSuggestion(suggestion);
-      
-      const processingTime = Date.now() - startTime;
-      const tokensUsed = 2000; // 概算値
-      const estimatedCost = 0.01; // 概算値
-      
-      // プロンプト履歴を保存
-      try {
-        const promptHistory = addPromptHistory({
-          originalPrompt: input,
-          userInput: input,
-          fileInfo: fileContent ? {
-            filename: fileContent.filename,
-            fileSize: fileContent.content.text.length,
-            wordCount: fileContent.content.wordCount,
           } : undefined,
-          modelUsed: config.selectedModel,
-          suggestion,
-          processingTime,
-          tokensUsed,
-          estimatedCost,
-          siteId: config.currentSiteId,
-        });
+        };
+
+        setGenerationProgress(50);
+        const apiKey = config.geminiApiKey;
+        console.log('Debug - CreateArticle (Ultrathink): API Key present:', !!apiKey);
+        console.log('Debug - CreateArticle (Ultrathink): API Key length:', apiKey?.length || 0);
+        if (!apiKey || apiKey.trim() === '') {
+          throw new Error('Gemini APIキーが設定されていません。設定画面でAPIキーを入力してください。');
+        }
+        const suggestion = await generateUltrathinkAISuggestion(apiKey, ultrathinkRequest);
+        setGenerationProgress(80);
+        setSuggestion(suggestion);
         
-        // プロンプト履歴IDを保存
-        setCurrentPromptHistoryId(promptHistory.id);
-        console.log('Prompt history saved with ID:', promptHistory.id);
-      } catch (historyError) {
-        console.error('Failed to save prompt history:', historyError);
-        // プロンプト履歴の保存に失敗してもAI提案は継続
+        console.log('Ultrathink AI suggestion generated successfully');
+      } else {
+        // 従来のAI提案を使用
+        console.log('Using traditional AI suggestion (no CSV data available)');
+        setGenerationProgress(30);
+        
+        // プロンプトテンプレートを作成
+        let template: PromptTemplate | undefined = undefined;
+        
+        try {
+          // カスタムプロンプトが提供された場合はそれを使用、そうでなければ設定から取得
+          const systemPrompt = customPrompt || config.prompts?.system || '';
+          
+          if (systemPrompt && systemPrompt.trim()) {
+            template = {
+              id: 'user_system_prompt',
+              name: 'システムプロンプト',
+              system: systemPrompt,
+              tone: 'professional' as const,
+              targetAudience: 'ユーザー設定',
+              seoFocus: 8,
+              purpose: 'information' as const,
+            };
+            console.log('Using system prompt template:', template);
+          } else {
+            console.log('No system prompt found, using default AI behavior');
+          }
+        } catch (error) {
+          console.error('Error creating prompt template:', error);
+          setAlert({ message: 'プロンプトテンプレートの作成に失敗しました', severity: 'error' });
+        }
+
+        // 構造化レスポンス機能を試行し、失敗した場合は従来方式にフォールバック
+        let suggestion;
+        
+        const apiKey = config.geminiApiKey;
+        console.log('Debug - CreateArticle (Standard): API Key present:', !!apiKey);
+        console.log('Debug - CreateArticle (Standard): API Key length:', apiKey?.length || 0);
+        if (!apiKey || apiKey.trim() === '') {
+          throw new Error('Gemini APIキーが設定されていません。設定画面でAPIキーを入力してください。');
+        }
+        
+        try {
+          console.log('Attempting structured response generation...');
+          suggestion = await generateArticleSuggestionsStructured(
+            apiKey,
+            config.selectedModel,
+            input,
+            currentSiteAnalysis || undefined,
+            template,
+            fileContent ? {
+              text: fileContent.content.text,
+              headings: fileContent.content.headings,
+              keywords: fileContent.content.keywords,
+              structure: fileContent.content.structure,
+            } : undefined
+          );
+          console.log('Structured response generation successful!');
+        } catch (structuredError) {
+          console.warn('Structured response failed, falling back to traditional method:', structuredError);
+          
+          suggestion = await generateArticleSuggestions(
+            apiKey,
+            config.selectedModel,
+            input,
+            currentSiteAnalysis || undefined,
+            template,
+            fileContent ? {
+              text: fileContent.content.text,
+              headings: fileContent.content.headings,
+              keywords: fileContent.content.keywords,
+              structure: fileContent.content.structure,
+            } : undefined
+          );
+          console.log('Traditional markdown parsing completed');
+        }
+
+        setGenerationProgress(80);
+        setSuggestion(suggestion);
       }
       
-      incrementApiCall(tokensUsed, estimatedCost);
+      setGenerationProgress(100);
       
-      // AI提案を直接エディターに反映
-      setShowAIResult(false); // AIResultReviewは表示しない
-      setAlert({ message: 'AI提案を生成し、エディターに反映しました。内容を確認・編集してください。', severity: 'success' });
+      // AI提案結果を表示
+      setTimeout(() => {
+        setCurrentStep('ai-result');
+        setAlert({ message: 'AI提案を生成しました。内容を確認してください。', severity: 'success' });
+      }, 500);
     } catch (error) {
       console.error('AI suggestion failed:', error);
       setAlert({ message: 'AI提案の生成に失敗しました。APIキーと通信状況を確認してください。', severity: 'error' });
     } finally {
       setLoading(false);
+      setGenerationProgress(0);
     }
   };
 
@@ -231,7 +400,7 @@ function CreateArticle() {
         }) : undefined,
         
         // AI提案関連情報
-        aiSuggestionId: currentPromptHistoryId || (currentSuggestion ? `suggestion_${Date.now()}` : undefined),
+        aiSuggestionId: currentSuggestion ? `suggestion_${Date.now()}` : undefined,
         
         // 基本的なSEO情報
         wordCount,
@@ -239,17 +408,6 @@ function CreateArticle() {
       } as Omit<DraftArticle, 'id' | 'createdAt' | 'updatedAt'>;
 
       const savedDraft = addDraft(enhancedDraftData);
-      
-      // プロンプト履歴と記事を連携
-      if (currentPromptHistoryId && savedDraft) {
-        try {
-          linkArticleToPromptHistory(savedDraft, currentPromptHistoryId);
-          console.log('Article linked to prompt history:', savedDraft.id, currentPromptHistoryId);
-        } catch (linkError) {
-          console.error('Failed to link article to prompt history:', linkError);
-          // 連携に失敗してもアラートは表示しない（保存は成功）
-        }
-      }
       
       setAlert({ message: '下書きを保存しました', severity: 'success' });
     } catch (error) {
@@ -285,7 +443,6 @@ function CreateArticle() {
 
       const publishedPost = await createPost(currentSite, postData);
       
-      incrementArticleCount();
       setAlert({ message: `記事「${article.title}」を公開しました`, severity: 'success' });
       
       // 公開成功後は下書き一覧に移動
@@ -333,7 +490,6 @@ function CreateArticle() {
 
       const scheduledPost = await createPost(currentSite, postData);
       
-      incrementArticleCount();
       setAlert({ 
         message: `記事「${article.title}」を${publishDate.toLocaleString('ja-JP')}に予約投稿しました`, 
         severity: 'success' 
@@ -438,107 +594,248 @@ function CreateArticle() {
   };
 
   // AI提案採用処理
-  const handleAdoptSuggestion = async () => {
-    if (!currentSuggestion || !config?.currentSiteId) return;
+  const handleAdoptSuggestion = (selectedTitleIndex: number, selectedMetaDescriptionIndex: number) => {
+    if (!currentSuggestion) return;
 
-    try {
-      // 提案内容を記事データに変換
-      const suggestedTitle = currentSuggestion.titles[0] || '';
-      const suggestedMetaDescription = currentSuggestion.metaDescriptions[0] || '';
+    // 構造化レスポンスがある場合は、それを優先的に使用
+    let suggestedTitle, suggestedMetaDescription, suggestedContent;
+    
+    if (currentSuggestion.structuredResponse) {
+      console.log('Using structured response for adoption:', currentSuggestion.structuredResponse);
       
-      // AI提案を構造化されたHTMLに変換
-      let suggestedContent = '';
-      if (currentSuggestion.fullArticle) {
-        // HTMLフォーマッターを使用して適切な構造化を行う
-        const formattedHTML = formatFullArticleToHTML(currentSuggestion);
-        suggestedContent = cleanupHTML(formattedHTML);
-      }
-
-      // 文字数計算
-      const plainTextContent = suggestedContent.replace(/<[^>]*>/g, '') || '';
-      const wordCount = plainTextContent.length;
-
-      // 下書きデータを作成して直接保存
-      const enhancedDraftData: Omit<DraftArticle, 'id' | 'createdAt' | 'updatedAt'> = {
-        title: suggestedTitle,
-        content: suggestedContent,
-        metaDescription: suggestedMetaDescription,
-        categories: [...currentSuggestion.categories.existing],
-        tags: [...currentSuggestion.tags.existing],
-        status: 'ready_to_publish',
-        siteId: config.currentSiteId,
+      // 構造化レスポンスから直接フィールドを取得
+      suggestedTitle = currentSuggestion.structuredResponse.title;
+      suggestedMetaDescription = currentSuggestion.structuredResponse.meta_description;
+      
+      // 純粋な記事本文を取得（markdown形式からHTMLに変換）
+      suggestedContent = currentSuggestion.structuredResponse.text;
+      
+      // markdown形式の場合はHTMLに変換
+      if (suggestedContent.includes('#') || suggestedContent.includes('**')) {
+        // 簡易的なmarkdown → HTML変換
+        suggestedContent = suggestedContent
+          .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+          .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+          .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+          .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+          .replace(/\*(.+?)\*/g, '<em>$1</em>')
+          .replace(/\n\n/g, '</p><p>')
+          .replace(/^(?!<[h1-6]|<\/[h1-6]|<p>|<\/p>)(.+)$/gm, '<p>$1</p>')
+          .replace(/<p><\/p>/g, '');
         
-        // AI提案関連の情報
-        sourceFile: fileContent?.filename,
-        originalInput: originalInput,
-        usedPrompt: originalInput,
-        fileMetadata: fileContent ? JSON.stringify({
-          filename: fileContent.filename,
-          fileSize: fileContent.content.text.length,
-          wordCount: fileContent.content.wordCount,
-          headings: fileContent.content.headings,
-          keywords: fileContent.content.keywords,
-        }) : undefined,
-        aiSuggestionId: currentPromptHistoryId,
-        wordCount,
-        keywords: fileContent?.content.keywords || [],
-      };
-
-      const savedDraft = addDraft(enhancedDraftData);
-      
-      // プロンプト履歴と記事を連携
-      if (currentPromptHistoryId && savedDraft) {
-        try {
-          linkArticleToPromptHistory(savedDraft, currentPromptHistoryId);
-          console.log('Article linked to prompt history:', savedDraft.id, currentPromptHistoryId);
-        } catch (linkError) {
-          console.error('Failed to link article to prompt history:', linkError);
+        if (!suggestedContent.startsWith('<')) {
+          suggestedContent = '<p>' + suggestedContent + '</p>';
         }
       }
-
-      // エディタ用の下書きデータをセット（自動保存は行わない）
-      setCurrentDraft({
-        title: suggestedTitle,
-        content: suggestedContent,
-        metaDescription: suggestedMetaDescription,
-        categories: [...currentSuggestion.categories.existing],
-        tags: [...currentSuggestion.tags.existing],
-        status: 'ready_to_publish',
-      });
       
-      setShowAIResult(false);
-      setAlert({ message: 'AI提案を採用して下書きを保存しました。内容を確認して投稿してください。', severity: 'success' });
-    } catch (error) {
-      console.error('Failed to adopt AI suggestion:', error);
-      setAlert({ message: 'AI提案の採用に失敗しました。', severity: 'error' });
+      console.log('Structured adoption - Content length:', suggestedContent.length);
+    } else {
+      // 従来方式：選択されたインデックスを使用
+      suggestedTitle = currentSuggestion.titles[selectedTitleIndex] || currentSuggestion.titles[0] || '';
+      suggestedMetaDescription = currentSuggestion.metaDescriptions[selectedMetaDescriptionIndex] || currentSuggestion.metaDescriptions[0] || '';
+      
+      // AI提案を構造化されたHTMLに変換
+      if (currentSuggestion.fullArticle) {
+        const formattedHTML = formatFullArticleToHTML(currentSuggestion);
+        suggestedContent = cleanupHTML(formattedHTML);
+      } else {
+        suggestedContent = '';
+      }
+      
+      console.log('Traditional adoption - Content length:', suggestedContent.length);
     }
+
+    // カテゴリー・タグのIDマッピング処理
+    let categoryIds: number[] = [];
+    let tagIds: number[] = [];
+    
+    if (currentSuggestion.structuredResponse) {
+      console.log('handleAdoptSuggestion: Mapping structured categories and tags to IDs');
+      
+      // 構造化レスポンスのカテゴリー文字列をIDにマッピング
+      const categoryNames = currentSuggestion.structuredResponse.categories || [];
+      categoryIds = categoryNames.map(name => {
+        const foundCategory = categories.find(cat => 
+          cat.name.toLowerCase() === name.toLowerCase()
+        );
+        if (foundCategory) {
+          console.log(`Found existing category: ${name} -> ID ${foundCategory.id}`);
+          return foundCategory.id;
+        } else {
+          console.log(`Category not found: ${name} (will need to create new)`);
+          // 今後の実装: 新規カテゴリー作成
+          return null;
+        }
+      }).filter(id => id !== null) as number[];
+      
+      // 構造化レスポンスのタグ文字列をIDにマッピング
+      const tagNames = currentSuggestion.structuredResponse.tags || [];
+      tagIds = tagNames.map(name => {
+        const foundTag = tags.find(tag => 
+          tag.name.toLowerCase() === name.toLowerCase()
+        );
+        if (foundTag) {
+          console.log(`Found existing tag: ${name} -> ID ${foundTag.id}`);
+          return foundTag.id;
+        } else {
+          console.log(`Tag not found: ${name} (will need to create new)`);
+          // 今後の実装: 新規タグ作成
+          return null;
+        }
+      }).filter(id => id !== null) as number[];
+      
+      console.log('handleAdoptSuggestion: Mapped categories:', categoryIds);
+      console.log('handleAdoptSuggestion: Mapped tags:', tagIds);
+    } else {
+      // 従来方式のカテゴリー・タグ
+      categoryIds = [...currentSuggestion.categories.existing];
+      tagIds = [...currentSuggestion.tags.existing];
+    }
+
+    // エディタ用の下書きデータをセット
+    setCurrentDraft({
+      title: suggestedTitle,
+      content: suggestedContent,
+      metaDescription: suggestedMetaDescription,
+      categories: categoryIds,
+      tags: tagIds,
+      status: 'ready_to_publish',
+    });
+    
+    // 編集ステップに移動
+    setCurrentStep('editing');
+    setAlert({ message: 'AI提案を採用しました。内容を確認・編集してください。', severity: 'success' });
   };
 
   // 手動編集モードに切り替え
   const handleEditManually = () => {
-    if (!currentSuggestion) return;
+    if (!currentSuggestion) {
+      console.error('handleEditManually: currentSuggestion is null');
+      return;
+    }
 
-    // 部分的に提案内容を採用（ユーザーが編集可能な状態で）
-    const suggestedTitle = currentSuggestion.titles[0] || '';
+    // 構造化レスポンスがある場合は、それを優先的に使用
+    let suggestedTitle, suggestedMetaDescription, suggestedContent;
     
-    // AI提案を構造化されたHTMLに変換（手動編集用）
-    let suggestedContent = '';
-    if (currentSuggestion.fullArticle) {
-      const formattedHTML = formatFullArticleToHTML(currentSuggestion);
-      suggestedContent = cleanupHTML(formattedHTML);
+    if (currentSuggestion.structuredResponse) {
+      console.log('handleEditManually: Using structured response:', currentSuggestion.structuredResponse);
+      
+      // 構造化レスポンスから直接フィールドを取得
+      suggestedTitle = currentSuggestion.structuredResponse.title;
+      suggestedMetaDescription = currentSuggestion.structuredResponse.meta_description;
+      
+      // 純粋な記事本文を取得（markdown形式からHTMLに変換）
+      suggestedContent = currentSuggestion.structuredResponse.text;
+      
+      // markdown形式の場合はHTMLに変換
+      if (suggestedContent.includes('#') || suggestedContent.includes('**')) {
+        suggestedContent = suggestedContent
+          .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+          .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+          .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+          .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+          .replace(/\*(.+?)\*/g, '<em>$1</em>')
+          .replace(/\n\n/g, '</p><p>')
+          .replace(/^(?!<[h1-6]|<\/[h1-6]|<p>|<\/p>)(.+)$/gm, '<p>$1</p>')
+          .replace(/<p><\/p>/g, '');
+        
+        if (!suggestedContent.startsWith('<')) {
+          suggestedContent = '<p>' + suggestedContent + '</p>';
+        }
+      }
+      
+      console.log('handleEditManually: Structured content length:', suggestedContent.length);
+    } else {
+      // 従来方式
+      suggestedTitle = currentSuggestion.titles[0] || '';
+      suggestedMetaDescription = currentSuggestion.metaDescriptions[0] || '';
+      console.log('handleEditManually: suggestedTitle:', suggestedTitle);
+      
+      // AI提案を構造化されたHTMLに変換（手動編集用）
+      suggestedContent = '';
+      console.log('handleEditManually: currentSuggestion.fullArticle:', currentSuggestion.fullArticle);
+      
+      if (currentSuggestion.fullArticle) {
+        console.log('handleEditManually: fullArticle exists, converting to HTML...');
+        const formattedHTML = formatFullArticleToHTML(currentSuggestion);
+        console.log('handleEditManually: formattedHTML length:', formattedHTML.length);
+        console.log('handleEditManually: formattedHTML sample:', formattedHTML.substring(0, 200) + '...');
+        
+        suggestedContent = cleanupHTML(formattedHTML);
+        console.log('handleEditManually: cleaned content length:', suggestedContent.length);
+        console.log('handleEditManually: cleaned content sample:', suggestedContent.substring(0, 200) + '...');
+      } else {
+        console.warn('handleEditManually: fullArticle is null or undefined');
+      }
+    }
+
+    // カテゴリー・タグのIDマッピング処理
+    let categoryIds: number[] = [];
+    let tagIds: number[] = [];
+    
+    if (currentSuggestion.structuredResponse) {
+      console.log('handleEditManually: Mapping structured categories and tags to IDs');
+      
+      // 構造化レスポンスのカテゴリー文字列をIDにマッピング
+      const categoryNames = currentSuggestion.structuredResponse.categories || [];
+      categoryIds = categoryNames.map(name => {
+        const foundCategory = categories.find(cat => 
+          cat.name.toLowerCase() === name.toLowerCase()
+        );
+        if (foundCategory) {
+          console.log(`Found existing category: ${name} -> ID ${foundCategory.id}`);
+          return foundCategory.id;
+        } else {
+          console.log(`Category not found: ${name} (will need to create new)`);
+          // 今後の実装: 新規カテゴリー作成
+          return null;
+        }
+      }).filter(id => id !== null) as number[];
+      
+      // 構造化レスポンスのタグ文字列をIDにマッピング
+      const tagNames = currentSuggestion.structuredResponse.tags || [];
+      tagIds = tagNames.map(name => {
+        const foundTag = tags.find(tag => 
+          tag.name.toLowerCase() === name.toLowerCase()
+        );
+        if (foundTag) {
+          console.log(`Found existing tag: ${name} -> ID ${foundTag.id}`);
+          return foundTag.id;
+        } else {
+          console.log(`Tag not found: ${name} (will need to create new)`);
+          // 今後の実装: 新規タグ作成
+          return null;
+        }
+      }).filter(id => id !== null) as number[];
+      
+      console.log('handleEditManually: Mapped categories:', categoryIds);
+      console.log('handleEditManually: Mapped tags:', tagIds);
+    } else {
+      // 従来方式のカテゴリー・タグ
+      categoryIds = [...currentSuggestion.categories.existing];
+      tagIds = [...currentSuggestion.tags.existing];
     }
 
     const draftData: Partial<DraftArticle> = {
       title: suggestedTitle,
       content: suggestedContent,
-      metaDescription: currentSuggestion.metaDescriptions[0] || '',
-      categories: [...currentSuggestion.categories.existing],
-      tags: [...currentSuggestion.tags.existing],
+      metaDescription: suggestedMetaDescription,
+      categories: categoryIds,
+      tags: tagIds,
       status: 'draft',
     };
 
+    console.log('handleEditManually: final draftData:', {
+      title: draftData.title,
+      contentLength: draftData.content?.length || 0,
+      metaDescription: draftData.metaDescription,
+      categoriesCount: draftData.categories?.length || 0,
+      tagsCount: draftData.tags?.length || 0
+    });
+
     setCurrentDraft(draftData);
-    setShowAIResult(false);
+    // 編集ステップに移動
+    setCurrentStep('editing');
     setAlert({ message: '編集モードに切り替えました。内容を自由に編集できます。', severity: 'info' });
   };
 
@@ -550,11 +847,37 @@ function CreateArticle() {
 
   // AI結果表示をキャンセル
   const handleCancelAIResult = () => {
-    setShowAIResult(false);
+    setCurrentStep('input');
     setOriginalInput('');
     setSuggestion(null);
-    setCurrentPromptHistoryId(null);
-    setAlert({ message: 'AI提案をキャンセルしました。', severity: 'info' });
+    setInputMode('none');
+    setAlert({ message: 'AI提案をキャンセルしました。最初からやり直してください。', severity: 'info' });
+  };
+
+  // 入力準備完了時の処理
+  const handleInputReady = async (input: string, fileContent?: FileProcessingResult) => {
+    setOriginalInput(input);
+    if (fileContent) {
+      setFileContent(fileContent);
+    }
+    setCurrentStep('ai-generation');
+    setGenerationProgress(10);
+    
+    // AI提案生成を開始
+    await handleGenerateAI(input);
+  };
+
+  // ステップ変更処理
+  const handleStepChange = (step: StepType) => {
+    // 特定の条件下でのみステップ移動を許可
+    if (step === 'input') {
+      setCurrentStep('input');
+      setInputMode('none');
+      setCurrentDraft(null);
+      setSuggestion(null);
+    } else if (step === 'editing' && currentDraft) {
+      setCurrentStep('editing');
+    }
   };
 
   const closeAlert = () => {
@@ -576,43 +899,119 @@ function CreateArticle() {
       {/* ローディングオーバーレイ */}
       <Backdrop
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={isLoading || isPublishing}
+        open={isPublishing}
       >
         <CircularProgress color="inherit" />
       </Backdrop>
 
-      {/* 条件付きレンダリング: AI提案結果表示 vs 通常エディタ */}
-      {showAIResult && currentSuggestion ? (
-        <AIResultReview
-          originalInput={originalInput}
-          fileContent={fileContent}
-          suggestion={currentSuggestion}
-          categories={categories}
-          tags={tags}
-          onAdoptSuggestion={handleAdoptSuggestion}
-          onEditManually={handleEditManually}
-          onRegenerateWithPrompt={handleRegenerateWithPrompt}
-          onCancel={handleCancelAIResult}
-          isLoading={isLoading}
-        />
-      ) : (
-        <ArticleEditor
-          draft={currentDraft}
-          categories={categories}
-          tags={tags}
-          suggestion={currentSuggestion}
-          onSave={handleSave}
-          onPublish={handlePublish}
-          onSchedulePublish={handleSchedulePublish}
-          onPreview={handlePreview}
-          onGenerateAI={handleGenerateAI}
-          onFileProcessed={handleFileProcessed}
-          onFileError={handleFileError}
-          isLoading={isLoading || isPublishing}
-          fileContent={fileContent}
-          autoApplyNewSuggestion={true}
-        />
-      )}
+      {/* ステップウィザード */}
+      <StepWizard 
+        currentStep={currentStep} 
+        onStepChange={handleStepChange}
+      >
+        {/* ステップ1: カテゴリー選択 */}
+        {currentStep === 'category-selection' && (
+          <CategorySelector
+            categories={categories}
+            selectedCategoryIds={selectedCategoryIds}
+            onCategoryChange={setSelectedCategoryIds}
+            onNext={handleCategoryNext}
+            disabled={isLoading || isPublishing}
+            loading={!categories.length}
+          />
+        )}
+
+        {/* ステップ2: CSV生成・データ分析 */}
+        {currentStep === 'csv-generation' && currentSite && (
+          <CSVGenerationStep
+            site={currentSite}
+            selectedCategories={categories.filter(cat => selectedCategoryIds.includes(cat.id))}
+            csvState={csvState}
+            isGenerating={isGeneratingCSV}
+            error={csvError}
+            onGenerate={handleGenerateCSV}
+            onForceUpdate={handleForceUpdateCSV}
+            onNext={handleCSVNext}
+            disabled={isLoading || isPublishing}
+          />
+        )}
+
+        {/* ステップ3: 入力方法選択 */}
+        {currentStep === 'input' && (
+          <InputSelector
+            onInputReady={handleInputReady}
+            onModeChange={setInputMode}
+            onRestartAnalysis={handleRestartAnalysis}
+            isLoading={isLoading}
+            disabled={isLoading || isPublishing}
+            hasExistingCSVData={csvState !== null && csvState.csvData.length > 0}
+          />
+        )}
+
+        {/* ステップ4: AI提案生成中 */}
+        {currentStep === 'ai-generation' && (
+          <Card elevation={2} sx={{ maxWidth: 600, mx: 'auto', mt: 4 }}>
+            <CardContent sx={{ textAlign: 'center', p: 4 }}>
+              <CircularProgress size={60} sx={{ mb: 3 }} />
+              <Typography variant="h5" gutterBottom>
+                AI提案を生成中...
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                あなたの入力内容を分析して、最適な記事提案を作成しています
+              </Typography>
+              <Box sx={{ width: '100%', mb: 2 }}>
+                <LinearProgress 
+                  variant="determinate" 
+                  value={generationProgress}
+                  sx={{ height: 8, borderRadius: 4 }}
+                />
+              </Box>
+              <Typography variant="caption" color="text.secondary">
+                進捗: {generationProgress}%
+              </Typography>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* ステップ5: AI提案結果表示 */}
+        {currentStep === 'ai-result' && currentSuggestion && (
+          <AIResultDisplay
+            suggestion={currentSuggestion}
+            originalInput={originalInput}
+            fileContent={fileContent}
+            categories={categories}
+            tags={tags}
+            onAdoptSuggestion={handleAdoptSuggestion}
+            onEditManually={handleEditManually}
+            onRegenerateWithPrompt={handleRegenerateWithPrompt}
+            onCancel={handleCancelAIResult}
+            isLoading={isLoading}
+          />
+        )}
+
+        {/* ステップ6: 記事編集 */}
+        {currentStep === 'editing' && (
+          <ArticleEditor
+            draft={currentDraft}
+            categories={categories}
+            tags={tags}
+            suggestion={currentSuggestion}
+            onSave={handleSave}
+            onPublish={handlePublish}
+            onSchedulePublish={handleSchedulePublish}
+            onPreview={handlePreview}
+            onGenerateAI={handleGenerateAI}
+            onFileProcessed={handleFileProcessed}
+            onFileError={handleFileError}
+            onCategoriesUpdate={setCategories}
+            onTagsUpdate={setTags}
+            isLoading={isLoading || isPublishing}
+            fileContent={fileContent}
+            originalInput={originalInput}
+            autoApplyNewSuggestion={false}
+          />
+        )}
+      </StepWizard>
 
       {/* アラート表示 */}
       <Snackbar

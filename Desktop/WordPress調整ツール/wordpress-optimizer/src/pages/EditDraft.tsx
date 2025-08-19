@@ -165,8 +165,13 @@ function EditDraft() {
         setAlert({ message: 'プロンプトテンプレートの作成に失敗しました', severity: 'error' });
       }
 
+      const apiKey = config.geminiApiKey;
+      if (!apiKey || apiKey.trim() === '') {
+        throw new Error('Gemini APIキーが設定されていません。設定画面でAPIキーを入力してください。');
+      }
+      
       const suggestion = await generateArticleSuggestions(
-        config.geminiApiKey,
+        apiKey,
         config.selectedModel,
         input,
         currentSiteAnalysis || undefined,
@@ -619,6 +624,8 @@ function EditDraft() {
           onGenerateAI={handleGenerateAI}
           onFileProcessed={handleFileProcessed}
           onFileError={handleFileError}
+          onCategoriesUpdate={setCategories}
+          onTagsUpdate={setTags}
           isLoading={isLoading || isPublishing}
           fileContent={fileContent}
           autoApplyNewSuggestion={true}

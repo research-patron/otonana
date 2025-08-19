@@ -33,6 +33,7 @@ import {
 import { useAppStore } from '../store';
 import { testWordPressConnection } from '../services/wordpress';
 import { testGeminiConnection } from '../services/gemini';
+import { validateApiKeyFormat } from '../utils/crypto';
 import type { WordPressSite, AppConfig } from '../types';
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -95,7 +96,15 @@ function Settings() {
   useEffect(() => {
     if (config) {
       console.log('Config loaded:', config);
-      setGeminiApiKey(config.geminiApiKey || '');
+      
+      // シンプルにAPIキーを直接読み込み（平文管理）
+      if (config.geminiApiKey) {
+        setGeminiApiKey(config.geminiApiKey);
+        console.log('Debug - API key loaded (plain text)');
+        console.log('Debug - API key length:', config.geminiApiKey.length);
+      } else {
+        setGeminiApiKey('');
+      }
       setSelectedModel(config.selectedModel || 'gemini-2.5-pro');
       setSystemPrompt(config.prompts?.system || '');
       setSites(config.sites || []);
@@ -106,13 +115,13 @@ function Settings() {
     setTabValue(newValue);
   };
 
-  // Gemini API設定の自動保存
+  // Gemini API設定の保存 - シンプル化
   const saveGeminiSettings = async () => {
     try {
       if (config) {
         const updatedConfig = {
           ...config,
-          geminiApiKey: geminiApiKey,
+          geminiApiKey: geminiApiKey, // 直接保存（平文）
           selectedModel: selectedModel,
           prompts: {
             ...config.prompts,
@@ -120,7 +129,10 @@ function Settings() {
           },
         };
         setConfig(updatedConfig);
-        updateGeminiApiKey(geminiApiKey);
+        updateGeminiApiKey(geminiApiKey); // 直接渡す
+        
+        console.log('Debug - API Key saved successfully (plain text)');
+        console.log('Debug - API Key length:', geminiApiKey?.length || 0);
       }
       setGeminiStatus('設定をセッションに保存しました');
     } catch (error: any) {
@@ -386,6 +398,60 @@ function Settings() {
               設定は現在のセッション中のみ保持されます（ページリロードでリセット）。永続保存にはエクスポート機能をご利用ください。
             </Alert>
 
+            {/* 設定のエクスポート・インポート */}
+            <Card elevation={2} sx={{ mb: 4, bgcolor: 'primary.50', border: '1px solid', borderColor: 'primary.200' }}>
+              <CardContent>
+                <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <BackupIcon color="primary" />
+                  設定のエクスポート・インポート
+                </Typography>
+
+                <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
+                  <Button 
+                    variant="contained" 
+                    color="primary"
+                    startIcon={<CloudSync />}
+                    onClick={handleCreateBackup}
+                    size="large"
+                  >
+                    設定をエクスポート
+                  </Button>
+                  <Button variant="outlined" component="label" size="large">
+                    設定をインポート
+                    <input 
+                      type="file" 
+                      hidden 
+                      accept=".json" 
+                      onChange={handleRestoreFromFile}
+                    />
+                  </Button>
+                </Box>
+
+                <Typography variant="body2" color="text.secondary">
+                  設定をJSONファイルとしてエクスポートし、別のセッションでインポートできます。
+                </Typography>
+
+                {connectionStatus && (
+                  <Alert 
+                    severity={
+                      connectionStatus.includes('成功') || 
+                      connectionStatus.includes('保存しました') || 
+                      connectionStatus.includes('ダウンロードしました') || 
+                      connectionStatus.includes('復元しました') ||
+                      connectionStatus.includes('追加しました')
+                        ? 'success' 
+                        : connectionStatus.includes('エラー') || connectionStatus.includes('失敗')
+                        ? 'error'
+                        : 'info'
+                    } 
+                    sx={{ mt: 2 }}
+                  >
+                    {connectionStatus}
+                  </Alert>
+                )}
+              </CardContent>
+            </Card>
+
             <Typography variant="h6" gutterBottom>
               Gemini API設定
             </Typography>
@@ -620,55 +686,6 @@ function Settings() {
                 sx={{ mt: 2 }}
               >
                 {siteStatus}
-              </Alert>
-            )}
-            
-            <Divider sx={{ my: 3 }} />
-
-            <Typography variant="h6" gutterBottom>
-              設定のエクスポート・インポート
-            </Typography>
-
-            <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
-              <Button 
-                variant="contained" 
-                color="primary"
-                startIcon={<CloudSync />}
-                onClick={handleCreateBackup}
-              >
-                設定をエクスポート
-              </Button>
-              <Button variant="outlined" component="label">
-                設定をインポート
-                <input 
-                  type="file" 
-                  hidden 
-                  accept=".json" 
-                  onChange={handleRestoreFromFile}
-                />
-              </Button>
-            </Box>
-
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-              設定をJSONファイルとしてエクスポートし、別のセッションでインポートできます。
-            </Typography>
-
-            {connectionStatus && (
-              <Alert 
-                severity={
-                  connectionStatus.includes('成功') || 
-                  connectionStatus.includes('保存しました') || 
-                  connectionStatus.includes('ダウンロードしました') || 
-                  connectionStatus.includes('復元しました') ||
-                  connectionStatus.includes('追加しました')
-                    ? 'success' 
-                    : connectionStatus.includes('エラー') || connectionStatus.includes('失敗')
-                    ? 'error'
-                    : 'info'
-                } 
-                sx={{ mt: 2 }}
-              >
-                {connectionStatus}
               </Alert>
             )}
           </TabPanel>

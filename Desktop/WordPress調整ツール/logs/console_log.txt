@@ -1,0 +1,1705 @@
+QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+gemini.ts:366  POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=U2FsdGVkX1+WWO6muYt2rJ/RSIufmxHbnENWdoDACoEW/GO9KU1AUZWf4D3fsFk5Wh0lhbluFcYxtSynwcn+0w== 400 (Bad Request)
+makeGeminiRequest @ gemini.ts:366
+analyzeArticleQuality @ gemini.ts:1006
+analyzePost @ qualityChecker.ts:215
+await in analyzePost
+startQualityCheck @ qualityChecker.ts:86
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773
+<button>
+exports.createElement @ chunk-OFVOUQQ6.js?v=3f5c2e7f:776
+(anonymous) @ chunk-IIIRGY6H.js?v=3f5c2e7f:2626
+MuiButtonBase-root @ chunk-IIIRGY6H.js?v=3f5c2e7f:1745
+react_stack_bottom_frame @ react-dom_client.js?v=3f5c2e7f:17424
+renderWithHooksAgain @ react-dom_client.js?v=3f5c2e7f:4281
+renderWithHooks @ react-dom_client.js?v=3f5c2e7f:4217
+updateForwardRef @ react-dom_client.js?v=3f5c2e7f:6461
+beginWork @ react-dom_client.js?v=3f5c2e7f:7864
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+performUnitOfWork @ react-dom_client.js?v=3f5c2e7f:10868
+workLoopSync @ react-dom_client.js?v=3f5c2e7f:10728
+renderRootSync @ react-dom_client.js?v=3f5c2e7f:10711
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10330
+performSyncWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:11635
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=3f5c2e7f:11536
+processRootScheduleInMicrotask @ react-dom_client.js?v=3f5c2e7f:11558
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:11649
+<MuiButtonBaseRoot>
+exports.jsxs @ chunk-7QHU65CW.js?v=3f5c2e7f:263
+ButtonBase2 @ chunk-FBENIYIY.js?v=3f5c2e7f:5176
+react_stack_bottom_frame @ react-dom_client.js?v=3f5c2e7f:17424
+renderWithHooksAgain @ react-dom_client.js?v=3f5c2e7f:4281
+renderWithHooks @ react-dom_client.js?v=3f5c2e7f:4217
+updateForwardRef @ react-dom_client.js?v=3f5c2e7f:6461
+beginWork @ react-dom_client.js?v=3f5c2e7f:7864
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+performUnitOfWork @ react-dom_client.js?v=3f5c2e7f:10868
+workLoopSync @ react-dom_client.js?v=3f5c2e7f:10728
+renderRootSync @ react-dom_client.js?v=3f5c2e7f:10711
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10330
+performSyncWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:11635
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=3f5c2e7f:11536
+processRootScheduleInMicrotask @ react-dom_client.js?v=3f5c2e7f:11558
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:11649
+<ForwardRef(ButtonBase2)>
+exports.createElement @ chunk-OFVOUQQ6.js?v=3f5c2e7f:776
+(anonymous) @ chunk-IIIRGY6H.js?v=3f5c2e7f:2626
+MuiButton-root @ chunk-IIIRGY6H.js?v=3f5c2e7f:1745
+react_stack_bottom_frame @ react-dom_client.js?v=3f5c2e7f:17424
+renderWithHooksAgain @ react-dom_client.js?v=3f5c2e7f:4281
+renderWithHooks @ react-dom_client.js?v=3f5c2e7f:4217
+updateForwardRef @ react-dom_client.js?v=3f5c2e7f:6461
+beginWork @ react-dom_client.js?v=3f5c2e7f:7864
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+performUnitOfWork @ react-dom_client.js?v=3f5c2e7f:10868
+workLoopSync @ react-dom_client.js?v=3f5c2e7f:10728
+renderRootSync @ react-dom_client.js?v=3f5c2e7f:10711
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10330
+performSyncWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:11635
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=3f5c2e7f:11536
+processRootScheduleInMicrotask @ react-dom_client.js?v=3f5c2e7f:11558
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:11649
+<MuiButtonRoot>
+exports.jsxs @ chunk-7QHU65CW.js?v=3f5c2e7f:263
+Button2 @ chunk-FBENIYIY.js?v=3f5c2e7f:5646
+react_stack_bottom_frame @ react-dom_client.js?v=3f5c2e7f:17424
+renderWithHooksAgain @ react-dom_client.js?v=3f5c2e7f:4281
+renderWithHooks @ react-dom_client.js?v=3f5c2e7f:4217
+updateForwardRef @ react-dom_client.js?v=3f5c2e7f:6461
+beginWork @ react-dom_client.js?v=3f5c2e7f:7864
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+performUnitOfWork @ react-dom_client.js?v=3f5c2e7f:10868
+workLoopSync @ react-dom_client.js?v=3f5c2e7f:10728
+renderRootSync @ react-dom_client.js?v=3f5c2e7f:10711
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10330
+performSyncWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:11635
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=3f5c2e7f:11536
+processRootScheduleInMicrotask @ react-dom_client.js?v=3f5c2e7f:11558
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:11649
+<ForwardRef(Button2)>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=3f5c2e7f:250
+renderStepContent @ QualityCheck.tsx:437
+(anonymous) @ QualityCheck.tsx:562
+QualityCheck @ QualityCheck.tsx:551
+react_stack_bottom_frame @ react-dom_client.js?v=3f5c2e7f:17424
+renderWithHooksAgain @ react-dom_client.js?v=3f5c2e7f:4281
+renderWithHooks @ react-dom_client.js?v=3f5c2e7f:4217
+updateFunctionComponent @ react-dom_client.js?v=3f5c2e7f:6619
+beginWork @ react-dom_client.js?v=3f5c2e7f:7654
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+performUnitOfWork @ react-dom_client.js?v=3f5c2e7f:10868
+workLoopSync @ react-dom_client.js?v=3f5c2e7f:10728
+renderRootSync @ react-dom_client.js?v=3f5c2e7f:10711
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10330
+performSyncWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:11635
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=3f5c2e7f:11536
+processRootScheduleInMicrotask @ react-dom_client.js?v=3f5c2e7f:11558
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:11649Understand this error
+qualityChecker.ts:93 記事「ポルトランドセメントの歴史と進化：古代から現代まで建設材料の革命」の分析に失敗: 記事分析エラー: API key not valid. Please pass a valid API key. Error: 記事分析エラー: API key not valid. Please pass a valid API key.
+    at QualityCheckerService.analyzePost (qualityChecker.ts:264:13)
+    at async QualityCheckerService.startQualityCheck (qualityChecker.ts:86:26)
+    at async startQualityCheck (QualityCheck.tsx:185:31)
+startQualityCheck @ qualityChecker.ts:93
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773
+<button>
+exports.createElement @ chunk-OFVOUQQ6.js?v=3f5c2e7f:776
+(anonymous) @ chunk-IIIRGY6H.js?v=3f5c2e7f:2626
+MuiButtonBase-root @ chunk-IIIRGY6H.js?v=3f5c2e7f:1745
+react_stack_bottom_frame @ react-dom_client.js?v=3f5c2e7f:17424
+renderWithHooksAgain @ react-dom_client.js?v=3f5c2e7f:4281
+renderWithHooks @ react-dom_client.js?v=3f5c2e7f:4217
+updateForwardRef @ react-dom_client.js?v=3f5c2e7f:6461
+beginWork @ react-dom_client.js?v=3f5c2e7f:7864
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+performUnitOfWork @ react-dom_client.js?v=3f5c2e7f:10868
+workLoopSync @ react-dom_client.js?v=3f5c2e7f:10728
+renderRootSync @ react-dom_client.js?v=3f5c2e7f:10711
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10330
+performSyncWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:11635
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=3f5c2e7f:11536
+processRootScheduleInMicrotask @ react-dom_client.js?v=3f5c2e7f:11558
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:11649
+<MuiButtonBaseRoot>
+exports.jsxs @ chunk-7QHU65CW.js?v=3f5c2e7f:263
+ButtonBase2 @ chunk-FBENIYIY.js?v=3f5c2e7f:5176
+react_stack_bottom_frame @ react-dom_client.js?v=3f5c2e7f:17424
+renderWithHooksAgain @ react-dom_client.js?v=3f5c2e7f:4281
+renderWithHooks @ react-dom_client.js?v=3f5c2e7f:4217
+updateForwardRef @ react-dom_client.js?v=3f5c2e7f:6461
+beginWork @ react-dom_client.js?v=3f5c2e7f:7864
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+performUnitOfWork @ react-dom_client.js?v=3f5c2e7f:10868
+workLoopSync @ react-dom_client.js?v=3f5c2e7f:10728
+renderRootSync @ react-dom_client.js?v=3f5c2e7f:10711
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10330
+performSyncWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:11635
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=3f5c2e7f:11536
+processRootScheduleInMicrotask @ react-dom_client.js?v=3f5c2e7f:11558
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:11649
+<ForwardRef(ButtonBase2)>
+exports.createElement @ chunk-OFVOUQQ6.js?v=3f5c2e7f:776
+(anonymous) @ chunk-IIIRGY6H.js?v=3f5c2e7f:2626
+MuiButton-root @ chunk-IIIRGY6H.js?v=3f5c2e7f:1745
+react_stack_bottom_frame @ react-dom_client.js?v=3f5c2e7f:17424
+renderWithHooksAgain @ react-dom_client.js?v=3f5c2e7f:4281
+renderWithHooks @ react-dom_client.js?v=3f5c2e7f:4217
+updateForwardRef @ react-dom_client.js?v=3f5c2e7f:6461
+beginWork @ react-dom_client.js?v=3f5c2e7f:7864
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+performUnitOfWork @ react-dom_client.js?v=3f5c2e7f:10868
+workLoopSync @ react-dom_client.js?v=3f5c2e7f:10728
+renderRootSync @ react-dom_client.js?v=3f5c2e7f:10711
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10330
+performSyncWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:11635
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=3f5c2e7f:11536
+processRootScheduleInMicrotask @ react-dom_client.js?v=3f5c2e7f:11558
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:11649
+<MuiButtonRoot>
+exports.jsxs @ chunk-7QHU65CW.js?v=3f5c2e7f:263
+Button2 @ chunk-FBENIYIY.js?v=3f5c2e7f:5646
+react_stack_bottom_frame @ react-dom_client.js?v=3f5c2e7f:17424
+renderWithHooksAgain @ react-dom_client.js?v=3f5c2e7f:4281
+renderWithHooks @ react-dom_client.js?v=3f5c2e7f:4217
+updateForwardRef @ react-dom_client.js?v=3f5c2e7f:6461
+beginWork @ react-dom_client.js?v=3f5c2e7f:7864
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+performUnitOfWork @ react-dom_client.js?v=3f5c2e7f:10868
+workLoopSync @ react-dom_client.js?v=3f5c2e7f:10728
+renderRootSync @ react-dom_client.js?v=3f5c2e7f:10711
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10330
+performSyncWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:11635
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=3f5c2e7f:11536
+processRootScheduleInMicrotask @ react-dom_client.js?v=3f5c2e7f:11558
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:11649
+<ForwardRef(Button2)>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=3f5c2e7f:250
+renderStepContent @ QualityCheck.tsx:437
+(anonymous) @ QualityCheck.tsx:562
+QualityCheck @ QualityCheck.tsx:551
+react_stack_bottom_frame @ react-dom_client.js?v=3f5c2e7f:17424
+renderWithHooksAgain @ react-dom_client.js?v=3f5c2e7f:4281
+renderWithHooks @ react-dom_client.js?v=3f5c2e7f:4217
+updateFunctionComponent @ react-dom_client.js?v=3f5c2e7f:6619
+beginWork @ react-dom_client.js?v=3f5c2e7f:7654
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+performUnitOfWork @ react-dom_client.js?v=3f5c2e7f:10868
+workLoopSync @ react-dom_client.js?v=3f5c2e7f:10728
+renderRootSync @ react-dom_client.js?v=3f5c2e7f:10711
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10330
+performSyncWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:11635
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=3f5c2e7f:11536
+processRootScheduleInMicrotask @ react-dom_client.js?v=3f5c2e7f:11558
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:11649Understand this error
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+gemini.ts:366  POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=U2FsdGVkX1+WWO6muYt2rJ/RSIufmxHbnENWdoDACoEW/GO9KU1AUZWf4D3fsFk5Wh0lhbluFcYxtSynwcn+0w== 400 (Bad Request)
+makeGeminiRequest @ gemini.ts:366
+analyzeArticleQuality @ gemini.ts:1006
+analyzePost @ qualityChecker.ts:215
+await in analyzePost
+startQualityCheck @ qualityChecker.ts:86
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773
+<button>
+exports.createElement @ chunk-OFVOUQQ6.js?v=3f5c2e7f:776
+(anonymous) @ chunk-IIIRGY6H.js?v=3f5c2e7f:2626
+MuiButtonBase-root @ chunk-IIIRGY6H.js?v=3f5c2e7f:1745
+react_stack_bottom_frame @ react-dom_client.js?v=3f5c2e7f:17424
+renderWithHooksAgain @ react-dom_client.js?v=3f5c2e7f:4281
+renderWithHooks @ react-dom_client.js?v=3f5c2e7f:4217
+updateForwardRef @ react-dom_client.js?v=3f5c2e7f:6461
+beginWork @ react-dom_client.js?v=3f5c2e7f:7864
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+performUnitOfWork @ react-dom_client.js?v=3f5c2e7f:10868
+workLoopSync @ react-dom_client.js?v=3f5c2e7f:10728
+renderRootSync @ react-dom_client.js?v=3f5c2e7f:10711
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10330
+performSyncWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:11635
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=3f5c2e7f:11536
+processRootScheduleInMicrotask @ react-dom_client.js?v=3f5c2e7f:11558
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:11649
+<MuiButtonBaseRoot>
+exports.jsxs @ chunk-7QHU65CW.js?v=3f5c2e7f:263
+ButtonBase2 @ chunk-FBENIYIY.js?v=3f5c2e7f:5176
+react_stack_bottom_frame @ react-dom_client.js?v=3f5c2e7f:17424
+renderWithHooksAgain @ react-dom_client.js?v=3f5c2e7f:4281
+renderWithHooks @ react-dom_client.js?v=3f5c2e7f:4217
+updateForwardRef @ react-dom_client.js?v=3f5c2e7f:6461
+beginWork @ react-dom_client.js?v=3f5c2e7f:7864
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+performUnitOfWork @ react-dom_client.js?v=3f5c2e7f:10868
+workLoopSync @ react-dom_client.js?v=3f5c2e7f:10728
+renderRootSync @ react-dom_client.js?v=3f5c2e7f:10711
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10330
+performSyncWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:11635
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=3f5c2e7f:11536
+processRootScheduleInMicrotask @ react-dom_client.js?v=3f5c2e7f:11558
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:11649
+<ForwardRef(ButtonBase2)>
+exports.createElement @ chunk-OFVOUQQ6.js?v=3f5c2e7f:776
+(anonymous) @ chunk-IIIRGY6H.js?v=3f5c2e7f:2626
+MuiButton-root @ chunk-IIIRGY6H.js?v=3f5c2e7f:1745
+react_stack_bottom_frame @ react-dom_client.js?v=3f5c2e7f:17424
+renderWithHooksAgain @ react-dom_client.js?v=3f5c2e7f:4281
+renderWithHooks @ react-dom_client.js?v=3f5c2e7f:4217
+updateForwardRef @ react-dom_client.js?v=3f5c2e7f:6461
+beginWork @ react-dom_client.js?v=3f5c2e7f:7864
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+performUnitOfWork @ react-dom_client.js?v=3f5c2e7f:10868
+workLoopSync @ react-dom_client.js?v=3f5c2e7f:10728
+renderRootSync @ react-dom_client.js?v=3f5c2e7f:10711
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10330
+performSyncWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:11635
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=3f5c2e7f:11536
+processRootScheduleInMicrotask @ react-dom_client.js?v=3f5c2e7f:11558
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:11649
+<MuiButtonRoot>
+exports.jsxs @ chunk-7QHU65CW.js?v=3f5c2e7f:263
+Button2 @ chunk-FBENIYIY.js?v=3f5c2e7f:5646
+react_stack_bottom_frame @ react-dom_client.js?v=3f5c2e7f:17424
+renderWithHooksAgain @ react-dom_client.js?v=3f5c2e7f:4281
+renderWithHooks @ react-dom_client.js?v=3f5c2e7f:4217
+updateForwardRef @ react-dom_client.js?v=3f5c2e7f:6461
+beginWork @ react-dom_client.js?v=3f5c2e7f:7864
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+performUnitOfWork @ react-dom_client.js?v=3f5c2e7f:10868
+workLoopSync @ react-dom_client.js?v=3f5c2e7f:10728
+renderRootSync @ react-dom_client.js?v=3f5c2e7f:10711
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10330
+performSyncWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:11635
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=3f5c2e7f:11536
+processRootScheduleInMicrotask @ react-dom_client.js?v=3f5c2e7f:11558
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:11649
+<ForwardRef(Button2)>
+exports.jsxDEV @ react_jsx-dev-runtime.js?v=3f5c2e7f:250
+renderStepContent @ QualityCheck.tsx:437
+(anonymous) @ QualityCheck.tsx:562
+QualityCheck @ QualityCheck.tsx:551
+react_stack_bottom_frame @ react-dom_client.js?v=3f5c2e7f:17424
+renderWithHooksAgain @ react-dom_client.js?v=3f5c2e7f:4281
+renderWithHooks @ react-dom_client.js?v=3f5c2e7f:4217
+updateFunctionComponent @ react-dom_client.js?v=3f5c2e7f:6619
+beginWork @ react-dom_client.js?v=3f5c2e7f:7654
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+performUnitOfWork @ react-dom_client.js?v=3f5c2e7f:10868
+workLoopSync @ react-dom_client.js?v=3f5c2e7f:10728
+renderRootSync @ react-dom_client.js?v=3f5c2e7f:10711
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10330
+performSyncWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:11635
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=3f5c2e7f:11536
+processRootScheduleInMicrotask @ react-dom_client.js?v=3f5c2e7f:11558
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:11649Understand this error
+qualityChecker.ts:93 記事「ポルトランドセメントのJIS規格と品質管理：規格要求から現場管理まで完全解説」の分析に失敗: 記事分析エラー: API key not valid. Please pass a valid API key. Error: 記事分析エラー: API key not valid. Please pass a valid API key.
+    at QualityCheckerService.analyzePost (qualityChecker.ts:264:13)
+    at async QualityCheckerService.startQualityCheck (qualityChecker.ts:86:26)
+    at async startQualityCheck (QualityCheck.tsx:185:31)
+startQualityCheck @ qualityChecker.ts:93
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773
+<button>
+exports.createElement @ chunk-OFVOUQQ6.js?v=3f5c2e7f:776
+(anonymous) @ chunk-IIIRGY6H.js?v=3f5c2e7f:2626
+MuiButtonBase-root @ chunk-IIIRGY6H.js?v=3f5c2e7f:1745
+react_stack_bottom_frame @ react-dom_client.js?v=3f5c2e7f:17424
+renderWithHooksAgain @ react-dom_client.js?v=3f5c2e7f:4281
+renderWithHooks @ react-dom_client.js?v=3f5c2e7f:4217
+updateForwardRef @ react-dom_client.js?v=3f5c2e7f:6461
+beginWork @ react-dom_client.js?v=3f5c2e7f:7864
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+performUnitOfWork @ react-dom_client.js?v=3f5c2e7f:10868
+workLoopSync @ react-dom_client.js?v=3f5c2e7f:10728
+renderRootSync @ react-dom_client.js?v=3f5c2e7f:10711
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10330
+performSyncWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:11635
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=3f5c2e7f:11536
+processRootScheduleInMicrotask @ react-dom_client.js?v=3f5c2e7f:11558
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:11649
+<MuiButtonBaseRoot>
+exports.jsxs @ chunk-7QHU65CW.js?v=3f5c2e7f:263
+ButtonBase2 @ chunk-FBENIYIY.js?v=3f5c2e7f:5176
+react_stack_bottom_frame @ react-dom_client.js?v=3f5c2e7f:17424
+renderWithHooksAgain @ react-dom_client.js?v=3f5c2e7f:4281
+renderWithHooks @ react-dom_client.js?v=3f5c2e7f:4217
+updateForwardRef @ react-dom_client.js?v=3f5c2e7f:6461
+beginWork @ react-dom_client.js?v=3f5c2e7f:7864
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+performUnitOfWork @ react-dom_client.js?v=3f5c2e7f:10868
+workLoopSync @ react-dom_client.js?v=3f5c2e7f:10728
+renderRootSync @ react-dom_client.js?v=3f5c2e7f:10711
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10330
+performSyncWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:11635
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=3f5c2e7f:11536
+processRootScheduleInMicrotask @ react-dom_client.js?v=3f5c2e7f:11558
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:11649
+<ForwardRef(ButtonBase2)>
+exports.createElement @ chunk-OFVOUQQ6.js?v=3f5c2e7f:776
+(anonymous) @ chunk-IIIRGY6H.js?v=3f5c2e7f:2626
+MuiButton-root @ chunk-IIIRGY6H.js?v=3f5c2e7f:1745
+react_stack_bottom_frame @ react-dom_client.js?v=3f5c2e7f:17424
+renderWithHooksAgain @ react-dom_client.js?v=3f5c2e7f:4281
+renderWithHooks @ react-dom_client.js?v=3f5c2e7f:4217
+updateForwardRef @ react-dom_client.js?v=3f5c2e7f:6461
+beginWork @ react-dom_client.js?v=3f5c2e7f:7864
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+performUnitOfWork @ react-dom_client.js?v=3f5c2e7f:10868
+workLoopSync @ react-dom_client.js?v=3f5c2e7f:10728
+renderRootSync @ react-dom_client.js?v=3f5c2e7f:10711
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10330
+performSyncWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:11635
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=3f5c2e7f:11536
+processRootScheduleInMicrotask @ react-dom_client.js?v=3f5c2e7f:11558
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:11649
+<MuiButtonRoot>
+exports.jsxs @ chunk-7QHU65CW.js?v=3f5c2e7f:263
+Button2 @ chunk-FBENIYIY.js?v=3f5c2e7f:5646
+react_stack_bottom_frame @ react-dom_client.js?v=3f5c2e7f:17424
+renderWithHooksAgain @ react-dom_client.js?v=3f5c2e7f:4281
+renderWithHooks @ react-dom_client.js?v=3f5c2e7f:4217
+updateForwardRef @ react-dom_client.js?v=3f5c2e7f:6461
+beginWork @ react-dom_client.js?v=3f5c2e7f:7864
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+performUnitOfWork @ react-dom_client.js?v=3f5c2e7f:10868
+workLoopSync @ react-dom_client.js?v=3f5c2e7f:10728
+renderRootSync @ react-dom_client.js?v=3f5c2e7f:10711
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10330
+performSyncWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:11635
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=3f5c2e7f:11536
+processRootScheduleInMicrotask @ react-dom_client.js?v=3f5c2e7f:11558
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:11649Understand this error
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+gemini.ts:366  POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=U2FsdGVkX1+WWO6muYt2rJ/RSIufmxHbnENWdoDACoEW/GO9KU1AUZWf4D3fsFk5Wh0lhbluFcYxtSynwcn+0w== 400 (Bad Request)
+makeGeminiRequest @ gemini.ts:366
+analyzeArticleQuality @ gemini.ts:1006
+analyzePost @ qualityChecker.ts:215
+await in analyzePost
+startQualityCheck @ qualityChecker.ts:86
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773
+<button>
+exports.createElement @ chunk-OFVOUQQ6.js?v=3f5c2e7f:776
+(anonymous) @ chunk-IIIRGY6H.js?v=3f5c2e7f:2626
+MuiButtonBase-root @ chunk-IIIRGY6H.js?v=3f5c2e7f:1745
+react_stack_bottom_frame @ react-dom_client.js?v=3f5c2e7f:17424
+renderWithHooksAgain @ react-dom_client.js?v=3f5c2e7f:4281
+renderWithHooks @ react-dom_client.js?v=3f5c2e7f:4217
+updateForwardRef @ react-dom_client.js?v=3f5c2e7f:6461
+beginWork @ react-dom_client.js?v=3f5c2e7f:7864
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+performUnitOfWork @ react-dom_client.js?v=3f5c2e7f:10868
+workLoopSync @ react-dom_client.js?v=3f5c2e7f:10728
+renderRootSync @ react-dom_client.js?v=3f5c2e7f:10711
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10330
+performSyncWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:11635
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=3f5c2e7f:11536
+processRootScheduleInMicrotask @ react-dom_client.js?v=3f5c2e7f:11558
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:11649
+<MuiButtonBaseRoot>
+exports.jsxs @ chunk-7QHU65CW.js?v=3f5c2e7f:263
+ButtonBase2 @ chunk-FBENIYIY.js?v=3f5c2e7f:5176
+react_stack_bottom_frame @ react-dom_client.js?v=3f5c2e7f:17424
+renderWithHooksAgain @ react-dom_client.js?v=3f5c2e7f:4281
+renderWithHooks @ react-dom_client.js?v=3f5c2e7f:4217
+updateForwardRef @ react-dom_client.js?v=3f5c2e7f:6461
+beginWork @ react-dom_client.js?v=3f5c2e7f:7864
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+performUnitOfWork @ react-dom_client.js?v=3f5c2e7f:10868
+workLoopSync @ react-dom_client.js?v=3f5c2e7f:10728
+renderRootSync @ react-dom_client.js?v=3f5c2e7f:10711
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10330
+performSyncWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:11635
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=3f5c2e7f:11536
+processRootScheduleInMicrotask @ react-dom_client.js?v=3f5c2e7f:11558
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:11649
+<ForwardRef(ButtonBase2)>
+exports.createElement @ chunk-OFVOUQQ6.js?v=3f5c2e7f:776
+(anonymous) @ chunk-IIIRGY6H.js?v=3f5c2e7f:2626
+MuiButton-root @ chunk-IIIRGY6H.js?v=3f5c2e7f:1745
+react_stack_bottom_frame @ react-dom_client.js?v=3f5c2e7f:17424
+renderWithHooksAgain @ react-dom_client.js?v=3f5c2e7f:4281
+renderWithHooks @ react-dom_client.js?v=3f5c2e7f:4217
+updateForwardRef @ react-dom_client.js?v=3f5c2e7f:6461
+beginWork @ react-dom_client.js?v=3f5c2e7f:7864
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+performUnitOfWork @ react-dom_client.js?v=3f5c2e7f:10868
+workLoopSync @ react-dom_client.js?v=3f5c2e7f:10728
+renderRootSync @ react-dom_client.js?v=3f5c2e7f:10711
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10330
+performSyncWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:11635
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=3f5c2e7f:11536
+processRootScheduleInMicrotask @ react-dom_client.js?v=3f5c2e7f:11558
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:11649
+<MuiButtonRoot>
+exports.jsxs @ chunk-7QHU65CW.js?v=3f5c2e7f:263
+Button2 @ chunk-FBENIYIY.js?v=3f5c2e7f:5646
+react_stack_bottom_frame @ react-dom_client.js?v=3f5c2e7f:17424
+renderWithHooksAgain @ react-dom_client.js?v=3f5c2e7f:4281
+renderWithHooks @ react-dom_client.js?v=3f5c2e7f:4217
+updateForwardRef @ react-dom_client.js?v=3f5c2e7f:6461
+beginWork @ react-dom_client.js?v=3f5c2e7f:7864
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+performUnitOfWork @ react-dom_client.js?v=3f5c2e7f:10868
+workLoopSync @ react-dom_client.js?v=3f5c2e7f:10728
+renderRootSync @ react-dom_client.js?v=3f5c2e7f:10711
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10330
+performSyncWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:11635
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=3f5c2e7f:11536
+processRootScheduleInMicrotask @ react-dom_client.js?v=3f5c2e7f:11558
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:11649Understand this error
+qualityChecker.ts:93 記事「普通セメントの硬化機構｜鍵を握るCHの役割」の分析に失敗: 記事分析エラー: API key not valid. Please pass a valid API key. Error: 記事分析エラー: API key not valid. Please pass a valid API key.
+    at QualityCheckerService.analyzePost (qualityChecker.ts:264:13)
+    at async QualityCheckerService.startQualityCheck (qualityChecker.ts:86:26)
+    at async startQualityCheck (QualityCheck.tsx:185:31)
+startQualityCheck @ qualityChecker.ts:93
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773
+<button>
+exports.createElement @ chunk-OFVOUQQ6.js?v=3f5c2e7f:776
+(anonymous) @ chunk-IIIRGY6H.js?v=3f5c2e7f:2626
+MuiButtonBase-root @ chunk-IIIRGY6H.js?v=3f5c2e7f:1745
+react_stack_bottom_frame @ react-dom_client.js?v=3f5c2e7f:17424
+renderWithHooksAgain @ react-dom_client.js?v=3f5c2e7f:4281
+renderWithHooks @ react-dom_client.js?v=3f5c2e7f:4217
+updateForwardRef @ react-dom_client.js?v=3f5c2e7f:6461
+beginWork @ react-dom_client.js?v=3f5c2e7f:7864
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+performUnitOfWork @ react-dom_client.js?v=3f5c2e7f:10868
+workLoopSync @ react-dom_client.js?v=3f5c2e7f:10728
+renderRootSync @ react-dom_client.js?v=3f5c2e7f:10711
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10330
+performSyncWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:11635
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=3f5c2e7f:11536
+processRootScheduleInMicrotask @ react-dom_client.js?v=3f5c2e7f:11558
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:11649
+<MuiButtonBaseRoot>
+exports.jsxs @ chunk-7QHU65CW.js?v=3f5c2e7f:263
+ButtonBase2 @ chunk-FBENIYIY.js?v=3f5c2e7f:5176
+react_stack_bottom_frame @ react-dom_client.js?v=3f5c2e7f:17424
+renderWithHooksAgain @ react-dom_client.js?v=3f5c2e7f:4281
+renderWithHooks @ react-dom_client.js?v=3f5c2e7f:4217
+updateForwardRef @ react-dom_client.js?v=3f5c2e7f:6461
+beginWork @ react-dom_client.js?v=3f5c2e7f:7864
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+performUnitOfWork @ react-dom_client.js?v=3f5c2e7f:10868
+workLoopSync @ react-dom_client.js?v=3f5c2e7f:10728
+renderRootSync @ react-dom_client.js?v=3f5c2e7f:10711
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10330
+performSyncWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:11635
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=3f5c2e7f:11536
+processRootScheduleInMicrotask @ react-dom_client.js?v=3f5c2e7f:11558
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:11649
+<ForwardRef(ButtonBase2)>
+exports.createElement @ chunk-OFVOUQQ6.js?v=3f5c2e7f:776
+(anonymous) @ chunk-IIIRGY6H.js?v=3f5c2e7f:2626
+MuiButton-root @ chunk-IIIRGY6H.js?v=3f5c2e7f:1745
+react_stack_bottom_frame @ react-dom_client.js?v=3f5c2e7f:17424
+renderWithHooksAgain @ react-dom_client.js?v=3f5c2e7f:4281
+renderWithHooks @ react-dom_client.js?v=3f5c2e7f:4217
+updateForwardRef @ react-dom_client.js?v=3f5c2e7f:6461
+beginWork @ react-dom_client.js?v=3f5c2e7f:7864
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+performUnitOfWork @ react-dom_client.js?v=3f5c2e7f:10868
+workLoopSync @ react-dom_client.js?v=3f5c2e7f:10728
+renderRootSync @ react-dom_client.js?v=3f5c2e7f:10711
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10330
+performSyncWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:11635
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=3f5c2e7f:11536
+processRootScheduleInMicrotask @ react-dom_client.js?v=3f5c2e7f:11558
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:11649
+<MuiButtonRoot>
+exports.jsxs @ chunk-7QHU65CW.js?v=3f5c2e7f:263
+Button2 @ chunk-FBENIYIY.js?v=3f5c2e7f:5646
+react_stack_bottom_frame @ react-dom_client.js?v=3f5c2e7f:17424
+renderWithHooksAgain @ react-dom_client.js?v=3f5c2e7f:4281
+renderWithHooks @ react-dom_client.js?v=3f5c2e7f:4217
+updateForwardRef @ react-dom_client.js?v=3f5c2e7f:6461
+beginWork @ react-dom_client.js?v=3f5c2e7f:7864
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+performUnitOfWork @ react-dom_client.js?v=3f5c2e7f:10868
+workLoopSync @ react-dom_client.js?v=3f5c2e7f:10728
+renderRootSync @ react-dom_client.js?v=3f5c2e7f:10711
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10330
+performSyncWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:11635
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=3f5c2e7f:11536
+processRootScheduleInMicrotask @ react-dom_client.js?v=3f5c2e7f:11558
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:11649Understand this error
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+gemini.ts:366  POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=U2FsdGVkX1+WWO6muYt2rJ/RSIufmxHbnENWdoDACoEW/GO9KU1AUZWf4D3fsFk5Wh0lhbluFcYxtSynwcn+0w== 400 (Bad Request)
+makeGeminiRequest @ gemini.ts:366
+analyzeArticleQuality @ gemini.ts:1006
+analyzePost @ qualityChecker.ts:215
+await in analyzePost
+startQualityCheck @ qualityChecker.ts:86
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773
+<button>
+exports.createElement @ chunk-OFVOUQQ6.js?v=3f5c2e7f:776
+(anonymous) @ chunk-IIIRGY6H.js?v=3f5c2e7f:2626
+MuiButtonBase-root @ chunk-IIIRGY6H.js?v=3f5c2e7f:1745
+react_stack_bottom_frame @ react-dom_client.js?v=3f5c2e7f:17424
+renderWithHooksAgain @ react-dom_client.js?v=3f5c2e7f:4281
+renderWithHooks @ react-dom_client.js?v=3f5c2e7f:4217
+updateForwardRef @ react-dom_client.js?v=3f5c2e7f:6461
+beginWork @ react-dom_client.js?v=3f5c2e7f:7864
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+performUnitOfWork @ react-dom_client.js?v=3f5c2e7f:10868
+workLoopSync @ react-dom_client.js?v=3f5c2e7f:10728
+renderRootSync @ react-dom_client.js?v=3f5c2e7f:10711
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10330
+performSyncWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:11635
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=3f5c2e7f:11536
+processRootScheduleInMicrotask @ react-dom_client.js?v=3f5c2e7f:11558
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:11649
+<MuiButtonBaseRoot>
+exports.jsxs @ chunk-7QHU65CW.js?v=3f5c2e7f:263
+ButtonBase2 @ chunk-FBENIYIY.js?v=3f5c2e7f:5176
+react_stack_bottom_frame @ react-dom_client.js?v=3f5c2e7f:17424
+renderWithHooksAgain @ react-dom_client.js?v=3f5c2e7f:4281
+renderWithHooks @ react-dom_client.js?v=3f5c2e7f:4217
+updateForwardRef @ react-dom_client.js?v=3f5c2e7f:6461
+beginWork @ react-dom_client.js?v=3f5c2e7f:7864
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+performUnitOfWork @ react-dom_client.js?v=3f5c2e7f:10868
+workLoopSync @ react-dom_client.js?v=3f5c2e7f:10728
+renderRootSync @ react-dom_client.js?v=3f5c2e7f:10711
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10330
+performSyncWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:11635
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=3f5c2e7f:11536
+processRootScheduleInMicrotask @ react-dom_client.js?v=3f5c2e7f:11558
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:11649
+<ForwardRef(ButtonBase2)>
+exports.createElement @ chunk-OFVOUQQ6.js?v=3f5c2e7f:776
+(anonymous) @ chunk-IIIRGY6H.js?v=3f5c2e7f:2626
+MuiButton-root @ chunk-IIIRGY6H.js?v=3f5c2e7f:1745
+react_stack_bottom_frame @ react-dom_client.js?v=3f5c2e7f:17424
+renderWithHooksAgain @ react-dom_client.js?v=3f5c2e7f:4281
+renderWithHooks @ react-dom_client.js?v=3f5c2e7f:4217
+updateForwardRef @ react-dom_client.js?v=3f5c2e7f:6461
+beginWork @ react-dom_client.js?v=3f5c2e7f:7864
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+performUnitOfWork @ react-dom_client.js?v=3f5c2e7f:10868
+workLoopSync @ react-dom_client.js?v=3f5c2e7f:10728
+renderRootSync @ react-dom_client.js?v=3f5c2e7f:10711
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10330
+performSyncWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:11635
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=3f5c2e7f:11536
+processRootScheduleInMicrotask @ react-dom_client.js?v=3f5c2e7f:11558
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:11649
+<MuiButtonRoot>
+exports.jsxs @ chunk-7QHU65CW.js?v=3f5c2e7f:263
+Button2 @ chunk-FBENIYIY.js?v=3f5c2e7f:5646
+react_stack_bottom_frame @ react-dom_client.js?v=3f5c2e7f:17424
+renderWithHooksAgain @ react-dom_client.js?v=3f5c2e7f:4281
+renderWithHooks @ react-dom_client.js?v=3f5c2e7f:4217
+updateForwardRef @ react-dom_client.js?v=3f5c2e7f:6461
+beginWork @ react-dom_client.js?v=3f5c2e7f:7864
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+performUnitOfWork @ react-dom_client.js?v=3f5c2e7f:10868
+workLoopSync @ react-dom_client.js?v=3f5c2e7f:10728
+renderRootSync @ react-dom_client.js?v=3f5c2e7f:10711
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10330
+performSyncWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:11635
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=3f5c2e7f:11536
+processRootScheduleInMicrotask @ react-dom_client.js?v=3f5c2e7f:11558
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:11649Understand this error
+qualityChecker.ts:93 記事「代替燃料によるCO2削減の実際」の分析に失敗: 記事分析エラー: API key not valid. Please pass a valid API key. Error: 記事分析エラー: API key not valid. Please pass a valid API key.
+    at QualityCheckerService.analyzePost (qualityChecker.ts:264:13)
+    at async QualityCheckerService.startQualityCheck (qualityChecker.ts:86:26)
+    at async startQualityCheck (QualityCheck.tsx:185:31)
+startQualityCheck @ qualityChecker.ts:93
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773
+<button>
+exports.createElement @ chunk-OFVOUQQ6.js?v=3f5c2e7f:776
+(anonymous) @ chunk-IIIRGY6H.js?v=3f5c2e7f:2626
+MuiButtonBase-root @ chunk-IIIRGY6H.js?v=3f5c2e7f:1745
+react_stack_bottom_frame @ react-dom_client.js?v=3f5c2e7f:17424
+renderWithHooksAgain @ react-dom_client.js?v=3f5c2e7f:4281
+renderWithHooks @ react-dom_client.js?v=3f5c2e7f:4217
+updateForwardRef @ react-dom_client.js?v=3f5c2e7f:6461
+beginWork @ react-dom_client.js?v=3f5c2e7f:7864
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+performUnitOfWork @ react-dom_client.js?v=3f5c2e7f:10868
+workLoopSync @ react-dom_client.js?v=3f5c2e7f:10728
+renderRootSync @ react-dom_client.js?v=3f5c2e7f:10711
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10330
+performSyncWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:11635
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=3f5c2e7f:11536
+processRootScheduleInMicrotask @ react-dom_client.js?v=3f5c2e7f:11558
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:11649
+<MuiButtonBaseRoot>
+exports.jsxs @ chunk-7QHU65CW.js?v=3f5c2e7f:263
+ButtonBase2 @ chunk-FBENIYIY.js?v=3f5c2e7f:5176
+react_stack_bottom_frame @ react-dom_client.js?v=3f5c2e7f:17424
+renderWithHooksAgain @ react-dom_client.js?v=3f5c2e7f:4281
+renderWithHooks @ react-dom_client.js?v=3f5c2e7f:4217
+updateForwardRef @ react-dom_client.js?v=3f5c2e7f:6461
+beginWork @ react-dom_client.js?v=3f5c2e7f:7864
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+performUnitOfWork @ react-dom_client.js?v=3f5c2e7f:10868
+workLoopSync @ react-dom_client.js?v=3f5c2e7f:10728
+renderRootSync @ react-dom_client.js?v=3f5c2e7f:10711
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10330
+performSyncWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:11635
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=3f5c2e7f:11536
+processRootScheduleInMicrotask @ react-dom_client.js?v=3f5c2e7f:11558
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:11649
+<ForwardRef(ButtonBase2)>
+exports.createElement @ chunk-OFVOUQQ6.js?v=3f5c2e7f:776
+(anonymous) @ chunk-IIIRGY6H.js?v=3f5c2e7f:2626
+MuiButton-root @ chunk-IIIRGY6H.js?v=3f5c2e7f:1745
+react_stack_bottom_frame @ react-dom_client.js?v=3f5c2e7f:17424
+renderWithHooksAgain @ react-dom_client.js?v=3f5c2e7f:4281
+renderWithHooks @ react-dom_client.js?v=3f5c2e7f:4217
+updateForwardRef @ react-dom_client.js?v=3f5c2e7f:6461
+beginWork @ react-dom_client.js?v=3f5c2e7f:7864
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+performUnitOfWork @ react-dom_client.js?v=3f5c2e7f:10868
+workLoopSync @ react-dom_client.js?v=3f5c2e7f:10728
+renderRootSync @ react-dom_client.js?v=3f5c2e7f:10711
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10330
+performSyncWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:11635
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=3f5c2e7f:11536
+processRootScheduleInMicrotask @ react-dom_client.js?v=3f5c2e7f:11558
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:11649
+<MuiButtonRoot>
+exports.jsxs @ chunk-7QHU65CW.js?v=3f5c2e7f:263
+Button2 @ chunk-FBENIYIY.js?v=3f5c2e7f:5646
+react_stack_bottom_frame @ react-dom_client.js?v=3f5c2e7f:17424
+renderWithHooksAgain @ react-dom_client.js?v=3f5c2e7f:4281
+renderWithHooks @ react-dom_client.js?v=3f5c2e7f:4217
+updateForwardRef @ react-dom_client.js?v=3f5c2e7f:6461
+beginWork @ react-dom_client.js?v=3f5c2e7f:7864
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+performUnitOfWork @ react-dom_client.js?v=3f5c2e7f:10868
+workLoopSync @ react-dom_client.js?v=3f5c2e7f:10728
+renderRootSync @ react-dom_client.js?v=3f5c2e7f:10711
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10330
+performSyncWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:11635
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=3f5c2e7f:11536
+processRootScheduleInMicrotask @ react-dom_client.js?v=3f5c2e7f:11558
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:11649Understand this error
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+gemini.ts:366  POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=U2FsdGVkX1+WWO6muYt2rJ/RSIufmxHbnENWdoDACoEW/GO9KU1AUZWf4D3fsFk5Wh0lhbluFcYxtSynwcn+0w== 400 (Bad Request)
+makeGeminiRequest @ gemini.ts:366
+analyzeArticleQuality @ gemini.ts:1006
+analyzePost @ qualityChecker.ts:215
+await in analyzePost
+startQualityCheck @ qualityChecker.ts:86
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773
+<button>
+exports.createElement @ chunk-OFVOUQQ6.js?v=3f5c2e7f:776
+(anonymous) @ chunk-IIIRGY6H.js?v=3f5c2e7f:2626
+MuiButtonBase-root @ chunk-IIIRGY6H.js?v=3f5c2e7f:1745
+react_stack_bottom_frame @ react-dom_client.js?v=3f5c2e7f:17424
+renderWithHooksAgain @ react-dom_client.js?v=3f5c2e7f:4281
+renderWithHooks @ react-dom_client.js?v=3f5c2e7f:4217
+updateForwardRef @ react-dom_client.js?v=3f5c2e7f:6461
+beginWork @ react-dom_client.js?v=3f5c2e7f:7864
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+performUnitOfWork @ react-dom_client.js?v=3f5c2e7f:10868
+workLoopSync @ react-dom_client.js?v=3f5c2e7f:10728
+renderRootSync @ react-dom_client.js?v=3f5c2e7f:10711
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10330
+performSyncWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:11635
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=3f5c2e7f:11536
+processRootScheduleInMicrotask @ react-dom_client.js?v=3f5c2e7f:11558
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:11649
+<MuiButtonBaseRoot>
+exports.jsxs @ chunk-7QHU65CW.js?v=3f5c2e7f:263
+ButtonBase2 @ chunk-FBENIYIY.js?v=3f5c2e7f:5176
+react_stack_bottom_frame @ react-dom_client.js?v=3f5c2e7f:17424
+renderWithHooksAgain @ react-dom_client.js?v=3f5c2e7f:4281
+renderWithHooks @ react-dom_client.js?v=3f5c2e7f:4217
+updateForwardRef @ react-dom_client.js?v=3f5c2e7f:6461
+beginWork @ react-dom_client.js?v=3f5c2e7f:7864
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+performUnitOfWork @ react-dom_client.js?v=3f5c2e7f:10868
+workLoopSync @ react-dom_client.js?v=3f5c2e7f:10728
+renderRootSync @ react-dom_client.js?v=3f5c2e7f:10711
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10330
+performSyncWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:11635
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=3f5c2e7f:11536
+processRootScheduleInMicrotask @ react-dom_client.js?v=3f5c2e7f:11558
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:11649
+<ForwardRef(ButtonBase2)>
+exports.createElement @ chunk-OFVOUQQ6.js?v=3f5c2e7f:776
+(anonymous) @ chunk-IIIRGY6H.js?v=3f5c2e7f:2626
+MuiButton-root @ chunk-IIIRGY6H.js?v=3f5c2e7f:1745
+react_stack_bottom_frame @ react-dom_client.js?v=3f5c2e7f:17424
+renderWithHooksAgain @ react-dom_client.js?v=3f5c2e7f:4281
+renderWithHooks @ react-dom_client.js?v=3f5c2e7f:4217
+updateForwardRef @ react-dom_client.js?v=3f5c2e7f:6461
+beginWork @ react-dom_client.js?v=3f5c2e7f:7864
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+performUnitOfWork @ react-dom_client.js?v=3f5c2e7f:10868
+workLoopSync @ react-dom_client.js?v=3f5c2e7f:10728
+renderRootSync @ react-dom_client.js?v=3f5c2e7f:10711
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10330
+performSyncWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:11635
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=3f5c2e7f:11536
+processRootScheduleInMicrotask @ react-dom_client.js?v=3f5c2e7f:11558
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:11649
+<MuiButtonRoot>
+exports.jsxs @ chunk-7QHU65CW.js?v=3f5c2e7f:263
+Button2 @ chunk-FBENIYIY.js?v=3f5c2e7f:5646
+react_stack_bottom_frame @ react-dom_client.js?v=3f5c2e7f:17424
+renderWithHooksAgain @ react-dom_client.js?v=3f5c2e7f:4281
+renderWithHooks @ react-dom_client.js?v=3f5c2e7f:4217
+updateForwardRef @ react-dom_client.js?v=3f5c2e7f:6461
+beginWork @ react-dom_client.js?v=3f5c2e7f:7864
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+performUnitOfWork @ react-dom_client.js?v=3f5c2e7f:10868
+workLoopSync @ react-dom_client.js?v=3f5c2e7f:10728
+renderRootSync @ react-dom_client.js?v=3f5c2e7f:10711
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10330
+performSyncWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:11635
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=3f5c2e7f:11536
+processRootScheduleInMicrotask @ react-dom_client.js?v=3f5c2e7f:11558
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:11649Understand this error
+qualityChecker.ts:93 記事「中庸熱ポルトランドセメントの特徴と用途：マスコンクリートに最適なセメントの科学的解析」の分析に失敗: 記事分析エラー: API key not valid. Please pass a valid API key. Error: 記事分析エラー: API key not valid. Please pass a valid API key.
+    at QualityCheckerService.analyzePost (qualityChecker.ts:264:13)
+    at async QualityCheckerService.startQualityCheck (qualityChecker.ts:86:26)
+    at async startQualityCheck (QualityCheck.tsx:185:31)
+startQualityCheck @ qualityChecker.ts:93
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773
+<button>
+exports.createElement @ chunk-OFVOUQQ6.js?v=3f5c2e7f:776
+(anonymous) @ chunk-IIIRGY6H.js?v=3f5c2e7f:2626
+MuiButtonBase-root @ chunk-IIIRGY6H.js?v=3f5c2e7f:1745
+react_stack_bottom_frame @ react-dom_client.js?v=3f5c2e7f:17424
+renderWithHooksAgain @ react-dom_client.js?v=3f5c2e7f:4281
+renderWithHooks @ react-dom_client.js?v=3f5c2e7f:4217
+updateForwardRef @ react-dom_client.js?v=3f5c2e7f:6461
+beginWork @ react-dom_client.js?v=3f5c2e7f:7864
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+performUnitOfWork @ react-dom_client.js?v=3f5c2e7f:10868
+workLoopSync @ react-dom_client.js?v=3f5c2e7f:10728
+renderRootSync @ react-dom_client.js?v=3f5c2e7f:10711
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10330
+performSyncWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:11635
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=3f5c2e7f:11536
+processRootScheduleInMicrotask @ react-dom_client.js?v=3f5c2e7f:11558
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:11649
+<MuiButtonBaseRoot>
+exports.jsxs @ chunk-7QHU65CW.js?v=3f5c2e7f:263
+ButtonBase2 @ chunk-FBENIYIY.js?v=3f5c2e7f:5176
+react_stack_bottom_frame @ react-dom_client.js?v=3f5c2e7f:17424
+renderWithHooksAgain @ react-dom_client.js?v=3f5c2e7f:4281
+renderWithHooks @ react-dom_client.js?v=3f5c2e7f:4217
+updateForwardRef @ react-dom_client.js?v=3f5c2e7f:6461
+beginWork @ react-dom_client.js?v=3f5c2e7f:7864
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+performUnitOfWork @ react-dom_client.js?v=3f5c2e7f:10868
+workLoopSync @ react-dom_client.js?v=3f5c2e7f:10728
+renderRootSync @ react-dom_client.js?v=3f5c2e7f:10711
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10330
+performSyncWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:11635
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=3f5c2e7f:11536
+processRootScheduleInMicrotask @ react-dom_client.js?v=3f5c2e7f:11558
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:11649
+<ForwardRef(ButtonBase2)>
+exports.createElement @ chunk-OFVOUQQ6.js?v=3f5c2e7f:776
+(anonymous) @ chunk-IIIRGY6H.js?v=3f5c2e7f:2626
+MuiButton-root @ chunk-IIIRGY6H.js?v=3f5c2e7f:1745
+react_stack_bottom_frame @ react-dom_client.js?v=3f5c2e7f:17424
+renderWithHooksAgain @ react-dom_client.js?v=3f5c2e7f:4281
+renderWithHooks @ react-dom_client.js?v=3f5c2e7f:4217
+updateForwardRef @ react-dom_client.js?v=3f5c2e7f:6461
+beginWork @ react-dom_client.js?v=3f5c2e7f:7864
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+performUnitOfWork @ react-dom_client.js?v=3f5c2e7f:10868
+workLoopSync @ react-dom_client.js?v=3f5c2e7f:10728
+renderRootSync @ react-dom_client.js?v=3f5c2e7f:10711
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10330
+performSyncWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:11635
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=3f5c2e7f:11536
+processRootScheduleInMicrotask @ react-dom_client.js?v=3f5c2e7f:11558
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:11649
+<MuiButtonRoot>
+exports.jsxs @ chunk-7QHU65CW.js?v=3f5c2e7f:263
+Button2 @ chunk-FBENIYIY.js?v=3f5c2e7f:5646
+react_stack_bottom_frame @ react-dom_client.js?v=3f5c2e7f:17424
+renderWithHooksAgain @ react-dom_client.js?v=3f5c2e7f:4281
+renderWithHooks @ react-dom_client.js?v=3f5c2e7f:4217
+updateForwardRef @ react-dom_client.js?v=3f5c2e7f:6461
+beginWork @ react-dom_client.js?v=3f5c2e7f:7864
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+performUnitOfWork @ react-dom_client.js?v=3f5c2e7f:10868
+workLoopSync @ react-dom_client.js?v=3f5c2e7f:10728
+renderRootSync @ react-dom_client.js?v=3f5c2e7f:10711
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10330
+performSyncWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:11635
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=3f5c2e7f:11536
+processRootScheduleInMicrotask @ react-dom_client.js?v=3f5c2e7f:11558
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:11649Understand this error
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+gemini.ts:366  POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=U2FsdGVkX1+WWO6muYt2rJ/RSIufmxHbnENWdoDACoEW/GO9KU1AUZWf4D3fsFk5Wh0lhbluFcYxtSynwcn+0w== 400 (Bad Request)
+makeGeminiRequest @ gemini.ts:366
+analyzeArticleQuality @ gemini.ts:1006
+analyzePost @ qualityChecker.ts:215
+await in analyzePost
+startQualityCheck @ qualityChecker.ts:86
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773
+<button>
+exports.createElement @ chunk-OFVOUQQ6.js?v=3f5c2e7f:776
+(anonymous) @ chunk-IIIRGY6H.js?v=3f5c2e7f:2626
+MuiButtonBase-root @ chunk-IIIRGY6H.js?v=3f5c2e7f:1745
+react_stack_bottom_frame @ react-dom_client.js?v=3f5c2e7f:17424
+renderWithHooksAgain @ react-dom_client.js?v=3f5c2e7f:4281
+renderWithHooks @ react-dom_client.js?v=3f5c2e7f:4217
+updateForwardRef @ react-dom_client.js?v=3f5c2e7f:6461
+beginWork @ react-dom_client.js?v=3f5c2e7f:7864
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+performUnitOfWork @ react-dom_client.js?v=3f5c2e7f:10868
+workLoopSync @ react-dom_client.js?v=3f5c2e7f:10728
+renderRootSync @ react-dom_client.js?v=3f5c2e7f:10711
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10330
+performSyncWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:11635
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=3f5c2e7f:11536
+processRootScheduleInMicrotask @ react-dom_client.js?v=3f5c2e7f:11558
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:11649
+<MuiButtonBaseRoot>
+exports.jsxs @ chunk-7QHU65CW.js?v=3f5c2e7f:263
+ButtonBase2 @ chunk-FBENIYIY.js?v=3f5c2e7f:5176
+react_stack_bottom_frame @ react-dom_client.js?v=3f5c2e7f:17424
+renderWithHooksAgain @ react-dom_client.js?v=3f5c2e7f:4281
+renderWithHooks @ react-dom_client.js?v=3f5c2e7f:4217
+updateForwardRef @ react-dom_client.js?v=3f5c2e7f:6461
+beginWork @ react-dom_client.js?v=3f5c2e7f:7864
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+performUnitOfWork @ react-dom_client.js?v=3f5c2e7f:10868
+workLoopSync @ react-dom_client.js?v=3f5c2e7f:10728
+renderRootSync @ react-dom_client.js?v=3f5c2e7f:10711
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10330
+performSyncWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:11635
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=3f5c2e7f:11536
+processRootScheduleInMicrotask @ react-dom_client.js?v=3f5c2e7f:11558
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:11649
+<ForwardRef(ButtonBase2)>
+exports.createElement @ chunk-OFVOUQQ6.js?v=3f5c2e7f:776
+(anonymous) @ chunk-IIIRGY6H.js?v=3f5c2e7f:2626
+MuiButton-root @ chunk-IIIRGY6H.js?v=3f5c2e7f:1745
+react_stack_bottom_frame @ react-dom_client.js?v=3f5c2e7f:17424
+renderWithHooksAgain @ react-dom_client.js?v=3f5c2e7f:4281
+renderWithHooks @ react-dom_client.js?v=3f5c2e7f:4217
+updateForwardRef @ react-dom_client.js?v=3f5c2e7f:6461
+beginWork @ react-dom_client.js?v=3f5c2e7f:7864
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+performUnitOfWork @ react-dom_client.js?v=3f5c2e7f:10868
+workLoopSync @ react-dom_client.js?v=3f5c2e7f:10728
+renderRootSync @ react-dom_client.js?v=3f5c2e7f:10711
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10330
+performSyncWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:11635
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=3f5c2e7f:11536
+processRootScheduleInMicrotask @ react-dom_client.js?v=3f5c2e7f:11558
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:11649
+<MuiButtonRoot>
+exports.jsxs @ chunk-7QHU65CW.js?v=3f5c2e7f:263
+Button2 @ chunk-FBENIYIY.js?v=3f5c2e7f:5646
+react_stack_bottom_frame @ react-dom_client.js?v=3f5c2e7f:17424
+renderWithHooksAgain @ react-dom_client.js?v=3f5c2e7f:4281
+renderWithHooks @ react-dom_client.js?v=3f5c2e7f:4217
+updateForwardRef @ react-dom_client.js?v=3f5c2e7f:6461
+beginWork @ react-dom_client.js?v=3f5c2e7f:7864
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+performUnitOfWork @ react-dom_client.js?v=3f5c2e7f:10868
+workLoopSync @ react-dom_client.js?v=3f5c2e7f:10728
+renderRootSync @ react-dom_client.js?v=3f5c2e7f:10711
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10330
+performSyncWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:11635
+flushSyncWorkAcrossRoots_impl @ react-dom_client.js?v=3f5c2e7f:11536
+processRootScheduleInMicrotask @ react-dom_client.js?v=3f5c2e7f:11558
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:11649Understand this error
+qualityChecker.ts:93 記事「トバモライトの結晶構造と特性 | 実際のALC製造現場での応用例を交えて解説」の分析に失敗: 記事分析エラー: API key not valid. Please pass a valid API key. Error: 記事分析エラー: API key not valid. Please pass a valid API key.
+    at QualityCheckerService.analyzePost (qualityChecker.ts:264:13)
+    at async QualityCheckerService.startQualityCheck (qualityChecker.ts:86:26)
+    at async startQualityCheck (QualityCheck.tsx:185:31)
+startQualityCheck @ qualityChecker.ts:93
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773Understand this error
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+gemini.ts:366  POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=U2FsdGVkX1+WWO6muYt2rJ/RSIufmxHbnENWdoDACoEW/GO9KU1AUZWf4D3fsFk5Wh0lhbluFcYxtSynwcn+0w== 400 (Bad Request)
+makeGeminiRequest @ gemini.ts:366
+analyzeArticleQuality @ gemini.ts:1006
+analyzePost @ qualityChecker.ts:215
+await in analyzePost
+startQualityCheck @ qualityChecker.ts:86
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773Understand this error
+qualityChecker.ts:93 記事「省エネルギー型セメント製造技術」の分析に失敗: 記事分析エラー: API key not valid. Please pass a valid API key. Error: 記事分析エラー: API key not valid. Please pass a valid API key.
+    at QualityCheckerService.analyzePost (qualityChecker.ts:264:13)
+    at async QualityCheckerService.startQualityCheck (qualityChecker.ts:86:26)
+    at async startQualityCheck (QualityCheck.tsx:185:31)
+startQualityCheck @ qualityChecker.ts:93
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773Understand this error
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+gemini.ts:366  POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=U2FsdGVkX1+WWO6muYt2rJ/RSIufmxHbnENWdoDACoEW/GO9KU1AUZWf4D3fsFk5Wh0lhbluFcYxtSynwcn+0w== 400 (Bad Request)
+makeGeminiRequest @ gemini.ts:366
+analyzeArticleQuality @ gemini.ts:1006
+analyzePost @ qualityChecker.ts:215
+await in analyzePost
+startQualityCheck @ qualityChecker.ts:86
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773Understand this error
+qualityChecker.ts:93 記事「早強ポルトランドセメントの特性と応用：早期強度発現の仕組みと実用的な活用法」の分析に失敗: 記事分析エラー: API key not valid. Please pass a valid API key. Error: 記事分析エラー: API key not valid. Please pass a valid API key.
+    at QualityCheckerService.analyzePost (qualityChecker.ts:264:13)
+    at async QualityCheckerService.startQualityCheck (qualityChecker.ts:86:26)
+    at async startQualityCheck (QualityCheck.tsx:185:31)
+startQualityCheck @ qualityChecker.ts:93
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773Understand this error
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+gemini.ts:366  POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=U2FsdGVkX1+WWO6muYt2rJ/RSIufmxHbnENWdoDACoEW/GO9KU1AUZWf4D3fsFk5Wh0lhbluFcYxtSynwcn+0w== 400 (Bad Request)
+makeGeminiRequest @ gemini.ts:366
+analyzeArticleQuality @ gemini.ts:1006
+analyzePost @ qualityChecker.ts:215
+await in analyzePost
+startQualityCheck @ qualityChecker.ts:86
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773Understand this error
+qualityChecker.ts:93 記事「LCA評価で見るセメントの環境影響」の分析に失敗: 記事分析エラー: API key not valid. Please pass a valid API key. Error: 記事分析エラー: API key not valid. Please pass a valid API key.
+    at QualityCheckerService.analyzePost (qualityChecker.ts:264:13)
+    at async QualityCheckerService.startQualityCheck (qualityChecker.ts:86:26)
+    at async startQualityCheck (QualityCheck.tsx:185:31)
+startQualityCheck @ qualityChecker.ts:93
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773Understand this error
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+gemini.ts:366  POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=U2FsdGVkX1+WWO6muYt2rJ/RSIufmxHbnENWdoDACoEW/GO9KU1AUZWf4D3fsFk5Wh0lhbluFcYxtSynwcn+0w== 400 (Bad Request)
+makeGeminiRequest @ gemini.ts:366
+analyzeArticleQuality @ gemini.ts:1006
+analyzePost @ qualityChecker.ts:215
+await in analyzePost
+startQualityCheck @ qualityChecker.ts:86
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773Understand this error
+qualityChecker.ts:93 記事「普通ポルトランドセメントの特徴と使い分け：建設現場の基本材料を徹底解説」の分析に失敗: 記事分析エラー: API key not valid. Please pass a valid API key. Error: 記事分析エラー: API key not valid. Please pass a valid API key.
+    at QualityCheckerService.analyzePost (qualityChecker.ts:264:13)
+    at async QualityCheckerService.startQualityCheck (qualityChecker.ts:86:26)
+    at async startQualityCheck (QualityCheck.tsx:185:31)
+startQualityCheck @ qualityChecker.ts:93
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773Understand this error
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+gemini.ts:366  POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=U2FsdGVkX1+WWO6muYt2rJ/RSIufmxHbnENWdoDACoEW/GO9KU1AUZWf4D3fsFk5Wh0lhbluFcYxtSynwcn+0w== 400 (Bad Request)
+makeGeminiRequest @ gemini.ts:366
+analyzeArticleQuality @ gemini.ts:1006
+analyzePost @ qualityChecker.ts:215
+await in analyzePost
+startQualityCheck @ qualityChecker.ts:86
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773Understand this error
+qualityChecker.ts:93 記事「CCUSがもたらすセメント産業の未来」の分析に失敗: 記事分析エラー: API key not valid. Please pass a valid API key. Error: 記事分析エラー: API key not valid. Please pass a valid API key.
+    at QualityCheckerService.analyzePost (qualityChecker.ts:264:13)
+    at async QualityCheckerService.startQualityCheck (qualityChecker.ts:86:26)
+    at async startQualityCheck (QualityCheck.tsx:185:31)
+startQualityCheck @ qualityChecker.ts:93
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773Understand this error
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+gemini.ts:366  POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=U2FsdGVkX1+WWO6muYt2rJ/RSIufmxHbnENWdoDACoEW/GO9KU1AUZWf4D3fsFk5Wh0lhbluFcYxtSynwcn+0w== 400 (Bad Request)
+makeGeminiRequest @ gemini.ts:366
+analyzeArticleQuality @ gemini.ts:1006
+analyzePost @ qualityChecker.ts:215
+await in analyzePost
+startQualityCheck @ qualityChecker.ts:86
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773Understand this error
+qualityChecker.ts:93 記事「水酸化カルシウム（CH）の役割と反応性 | アルカリ性維持から耐久性まで実例で解説」の分析に失敗: 記事分析エラー: API key not valid. Please pass a valid API key. Error: 記事分析エラー: API key not valid. Please pass a valid API key.
+    at QualityCheckerService.analyzePost (qualityChecker.ts:264:13)
+    at async QualityCheckerService.startQualityCheck (qualityChecker.ts:86:26)
+    at async startQualityCheck (QualityCheck.tsx:185:31)
+startQualityCheck @ qualityChecker.ts:93
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773Understand this error
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+gemini.ts:366  POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=U2FsdGVkX1+WWO6muYt2rJ/RSIufmxHbnENWdoDACoEW/GO9KU1AUZWf4D3fsFk5Wh0lhbluFcYxtSynwcn+0w== 400 (Bad Request)
+makeGeminiRequest @ gemini.ts:366
+analyzeArticleQuality @ gemini.ts:1006
+analyzePost @ qualityChecker.ts:215
+await in analyzePost
+startQualityCheck @ qualityChecker.ts:86
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773Understand this error
+qualityChecker.ts:93 記事「カーボンニュートラルセメントの開発動向」の分析に失敗: 記事分析エラー: API key not valid. Please pass a valid API key. Error: 記事分析エラー: API key not valid. Please pass a valid API key.
+    at QualityCheckerService.analyzePost (qualityChecker.ts:264:13)
+    at async QualityCheckerService.startQualityCheck (qualityChecker.ts:86:26)
+    at async startQualityCheck (QualityCheck.tsx:185:31)
+startQualityCheck @ qualityChecker.ts:93
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773Understand this error
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+gemini.ts:366  POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=U2FsdGVkX1+WWO6muYt2rJ/RSIufmxHbnENWdoDACoEW/GO9KU1AUZWf4D3fsFk5Wh0lhbluFcYxtSynwcn+0w== 400 (Bad Request)
+makeGeminiRequest @ gemini.ts:366
+analyzeArticleQuality @ gemini.ts:1006
+analyzePost @ qualityChecker.ts:215
+await in analyzePost
+startQualityCheck @ qualityChecker.ts:86
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773Understand this error
+qualityChecker.ts:93 記事「ジェナイトとCSH構造モデルの最新知見 | セメントの強度発現メカニズムを解明」の分析に失敗: 記事分析エラー: API key not valid. Please pass a valid API key. Error: 記事分析エラー: API key not valid. Please pass a valid API key.
+    at QualityCheckerService.analyzePost (qualityChecker.ts:264:13)
+    at async QualityCheckerService.startQualityCheck (qualityChecker.ts:86:26)
+    at async startQualityCheck (QualityCheck.tsx:185:31)
+startQualityCheck @ qualityChecker.ts:93
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773Understand this error
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+gemini.ts:366  POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=U2FsdGVkX1+WWO6muYt2rJ/RSIufmxHbnENWdoDACoEW/GO9KU1AUZWf4D3fsFk5Wh0lhbluFcYxtSynwcn+0w== 400 (Bad Request)
+makeGeminiRequest @ gemini.ts:366
+analyzeArticleQuality @ gemini.ts:1006
+analyzePost @ qualityChecker.ts:215
+await in analyzePost
+startQualityCheck @ qualityChecker.ts:86
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773Understand this error
+qualityChecker.ts:93 記事「廃棄物利用によるセメント製造の循環型社会貢献」の分析に失敗: 記事分析エラー: API key not valid. Please pass a valid API key. Error: 記事分析エラー: API key not valid. Please pass a valid API key.
+    at QualityCheckerService.analyzePost (qualityChecker.ts:264:13)
+    at async QualityCheckerService.startQualityCheck (qualityChecker.ts:86:26)
+    at async startQualityCheck (QualityCheck.tsx:185:31)
+startQualityCheck @ qualityChecker.ts:93
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773Understand this error
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+gemini.ts:366  POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=U2FsdGVkX1+WWO6muYt2rJ/RSIufmxHbnENWdoDACoEW/GO9KU1AUZWf4D3fsFk5Wh0lhbluFcYxtSynwcn+0w== 400 (Bad Request)
+makeGeminiRequest @ gemini.ts:366
+analyzeArticleQuality @ gemini.ts:1006
+analyzePost @ qualityChecker.ts:215
+await in analyzePost
+startQualityCheck @ qualityChecker.ts:86
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773Understand this error
+qualityChecker.ts:93 記事「セメント水和物の炭酸化とその制御」の分析に失敗: 記事分析エラー: API key not valid. Please pass a valid API key. Error: 記事分析エラー: API key not valid. Please pass a valid API key.
+    at QualityCheckerService.analyzePost (qualityChecker.ts:264:13)
+    at async QualityCheckerService.startQualityCheck (qualityChecker.ts:86:26)
+    at async startQualityCheck (QualityCheck.tsx:185:31)
+startQualityCheck @ qualityChecker.ts:93
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773Understand this error
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+gemini.ts:366  POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=U2FsdGVkX1+WWO6muYt2rJ/RSIufmxHbnENWdoDACoEW/GO9KU1AUZWf4D3fsFk5Wh0lhbluFcYxtSynwcn+0w== 400 (Bad Request)
+makeGeminiRequest @ gemini.ts:366
+analyzeArticleQuality @ gemini.ts:1006
+analyzePost @ qualityChecker.ts:215
+await in analyzePost
+startQualityCheck @ qualityChecker.ts:86
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773Understand this error
+qualityChecker.ts:93 記事「エトリンガイトの生成と膨張問題 | 実際の構造物での被害事例と対策を解説」の分析に失敗: 記事分析エラー: API key not valid. Please pass a valid API key. Error: 記事分析エラー: API key not valid. Please pass a valid API key.
+    at QualityCheckerService.analyzePost (qualityChecker.ts:264:13)
+    at async QualityCheckerService.startQualityCheck (qualityChecker.ts:86:26)
+    at async startQualityCheck (QualityCheck.tsx:185:31)
+startQualityCheck @ qualityChecker.ts:93
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773Understand this error
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+gemini.ts:366  POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=U2FsdGVkX1+WWO6muYt2rJ/RSIufmxHbnENWdoDACoEW/GO9KU1AUZWf4D3fsFk5Wh0lhbluFcYxtSynwcn+0w== 400 (Bad Request)
+makeGeminiRequest @ gemini.ts:366
+analyzeArticleQuality @ gemini.ts:1006
+analyzePost @ qualityChecker.ts:215
+await in analyzePost
+startQualityCheck @ qualityChecker.ts:86
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773Understand this error
+qualityChecker.ts:93 記事「セメント産業のCO2削減技術最前線」の分析に失敗: 記事分析エラー: API key not valid. Please pass a valid API key. Error: 記事分析エラー: API key not valid. Please pass a valid API key.
+    at QualityCheckerService.analyzePost (qualityChecker.ts:264:13)
+    at async QualityCheckerService.startQualityCheck (qualityChecker.ts:86:26)
+    at async startQualityCheck (QualityCheck.tsx:185:31)
+startQualityCheck @ qualityChecker.ts:93
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773Understand this error
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+gemini.ts:366  POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=U2FsdGVkX1+WWO6muYt2rJ/RSIufmxHbnENWdoDACoEW/GO9KU1AUZWf4D3fsFk5Wh0lhbluFcYxtSynwcn+0w== 400 (Bad Request)
+makeGeminiRequest @ gemini.ts:366
+analyzeArticleQuality @ gemini.ts:1006
+analyzePost @ qualityChecker.ts:215
+await in analyzePost
+startQualityCheck @ qualityChecker.ts:86
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773Understand this error
+qualityChecker.ts:93 記事「ストラトリンガイトの生成条件と影響」の分析に失敗: 記事分析エラー: API key not valid. Please pass a valid API key. Error: 記事分析エラー: API key not valid. Please pass a valid API key.
+    at QualityCheckerService.analyzePost (qualityChecker.ts:264:13)
+    at async QualityCheckerService.startQualityCheck (qualityChecker.ts:86:26)
+    at async startQualityCheck (QualityCheck.tsx:185:31)
+startQualityCheck @ qualityChecker.ts:93
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773Understand this error
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+gemini.ts:366  POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=U2FsdGVkX1+WWO6muYt2rJ/RSIufmxHbnENWdoDACoEW/GO9KU1AUZWf4D3fsFk5Wh0lhbluFcYxtSynwcn+0w== 400 (Bad Request)
+makeGeminiRequest @ gemini.ts:366
+analyzeArticleQuality @ gemini.ts:1006
+analyzePost @ qualityChecker.ts:215
+await in analyzePost
+startQualityCheck @ qualityChecker.ts:86
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773Understand this error
+qualityChecker.ts:93 記事「CSHゲルの謎：セメントの強度発現メカニズム | 実際の現場での応用例を交えて解説」の分析に失敗: 記事分析エラー: API key not valid. Please pass a valid API key. Error: 記事分析エラー: API key not valid. Please pass a valid API key.
+    at QualityCheckerService.analyzePost (qualityChecker.ts:264:13)
+    at async QualityCheckerService.startQualityCheck (qualityChecker.ts:86:26)
+    at async startQualityCheck (QualityCheck.tsx:185:31)
+startQualityCheck @ qualityChecker.ts:93
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773Understand this error
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+gemini.ts:366  POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=U2FsdGVkX1+WWO6muYt2rJ/RSIufmxHbnENWdoDACoEW/GO9KU1AUZWf4D3fsFk5Wh0lhbluFcYxtSynwcn+0w== 400 (Bad Request)
+makeGeminiRequest @ gemini.ts:366
+analyzeArticleQuality @ gemini.ts:1006
+analyzePost @ qualityChecker.ts:215
+await in analyzePost
+startQualityCheck @ qualityChecker.ts:86
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773Understand this error
+qualityChecker.ts:93 記事「高炉セメントのCO2削減効果と課題：持続可能な建設材料への挑戦」の分析に失敗: 記事分析エラー: API key not valid. Please pass a valid API key. Error: 記事分析エラー: API key not valid. Please pass a valid API key.
+    at QualityCheckerService.analyzePost (qualityChecker.ts:264:13)
+    at async QualityCheckerService.startQualityCheck (qualityChecker.ts:86:26)
+    at async startQualityCheck (QualityCheck.tsx:185:31)
+startQualityCheck @ qualityChecker.ts:93
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773Understand this error
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+gemini.ts:366  POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=U2FsdGVkX1+WWO6muYt2rJ/RSIufmxHbnENWdoDACoEW/GO9KU1AUZWf4D3fsFk5Wh0lhbluFcYxtSynwcn+0w== 400 (Bad Request)
+makeGeminiRequest @ gemini.ts:366
+analyzeArticleQuality @ gemini.ts:1006
+analyzePost @ qualityChecker.ts:215
+await in analyzePost
+startQualityCheck @ qualityChecker.ts:86
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773Understand this error
+qualityChecker.ts:93 記事「セメント化学の歴史と発展」の分析に失敗: 記事分析エラー: API key not valid. Please pass a valid API key. Error: 記事分析エラー: API key not valid. Please pass a valid API key.
+    at QualityCheckerService.analyzePost (qualityChecker.ts:264:13)
+    at async QualityCheckerService.startQualityCheck (qualityChecker.ts:86:26)
+    at async startQualityCheck (QualityCheck.tsx:185:31)
+startQualityCheck @ qualityChecker.ts:93
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773Understand this error
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+gemini.ts:366  POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=U2FsdGVkX1+WWO6muYt2rJ/RSIufmxHbnENWdoDACoEW/GO9KU1AUZWf4D3fsFk5Wh0lhbluFcYxtSynwcn+0w== 400 (Bad Request)
+makeGeminiRequest @ gemini.ts:366
+analyzeArticleQuality @ gemini.ts:1006
+analyzePost @ qualityChecker.ts:215
+await in analyzePost
+startQualityCheck @ qualityChecker.ts:86
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773Understand this error
+qualityChecker.ts:93 記事「セメントの水和反応メカニズム詳解」の分析に失敗: 記事分析エラー: API key not valid. Please pass a valid API key. Error: 記事分析エラー: API key not valid. Please pass a valid API key.
+    at QualityCheckerService.analyzePost (qualityChecker.ts:264:13)
+    at async QualityCheckerService.startQualityCheck (qualityChecker.ts:86:26)
+    at async startQualityCheck (QualityCheck.tsx:185:31)
+startQualityCheck @ qualityChecker.ts:93
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773Understand this error
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+gemini.ts:366  POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=U2FsdGVkX1+WWO6muYt2rJ/RSIufmxHbnENWdoDACoEW/GO9KU1AUZWf4D3fsFk5Wh0lhbluFcYxtSynwcn+0w== 400 (Bad Request)
+makeGeminiRequest @ gemini.ts:366
+analyzeArticleQuality @ gemini.ts:1006
+analyzePost @ qualityChecker.ts:215
+await in analyzePost
+startQualityCheck @ qualityChecker.ts:86
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773Understand this error
+qualityChecker.ts:93 記事「セメントの相平衡と熱力学の基礎」の分析に失敗: 記事分析エラー: API key not valid. Please pass a valid API key. Error: 記事分析エラー: API key not valid. Please pass a valid API key.
+    at QualityCheckerService.analyzePost (qualityChecker.ts:264:13)
+    at async QualityCheckerService.startQualityCheck (qualityChecker.ts:86:26)
+    at async startQualityCheck (QualityCheck.tsx:185:31)
+startQualityCheck @ qualityChecker.ts:93
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773Understand this error
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+gemini.ts:366  POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=U2FsdGVkX1+WWO6muYt2rJ/RSIufmxHbnENWdoDACoEW/GO9KU1AUZWf4D3fsFk5Wh0lhbluFcYxtSynwcn+0w== 400 (Bad Request)
+makeGeminiRequest @ gemini.ts:366
+analyzeArticleQuality @ gemini.ts:1006
+analyzePost @ qualityChecker.ts:215
+await in analyzePost
+startQualityCheck @ qualityChecker.ts:86
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773Understand this error
+qualityChecker.ts:93 記事「ケイ酸カルシウム水和物（CSH）の化学的性質と実環境における構造変化」の分析に失敗: 記事分析エラー: API key not valid. Please pass a valid API key. Error: 記事分析エラー: API key not valid. Please pass a valid API key.
+    at QualityCheckerService.analyzePost (qualityChecker.ts:264:13)
+    at async QualityCheckerService.startQualityCheck (qualityChecker.ts:86:26)
+    at async startQualityCheck (QualityCheck.tsx:185:31)
+startQualityCheck @ qualityChecker.ts:93
+await in startQualityCheck
+startQualityCheck @ QualityCheck.tsx:185
+executeDispatch @ react-dom_client.js?v=3f5c2e7f:11736
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+processDispatchQueue @ react-dom_client.js?v=3f5c2e7f:11772
+(anonymous) @ react-dom_client.js?v=3f5c2e7f:12182
+batchedUpdates$1 @ react-dom_client.js?v=3f5c2e7f:2628
+dispatchEventForPluginEventSystem @ react-dom_client.js?v=3f5c2e7f:11877
+dispatchEvent @ react-dom_client.js?v=3f5c2e7f:14792
+dispatchDiscreteEvent @ react-dom_client.js?v=3f5c2e7f:14773Understand this error
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+QualityCheck.tsx:110 QualityCheck Debug: {configExists: true, sitesCount: 1, currentSiteId: '1755169793020', currentSite: 'https://student-subscription.com (1755169793020)', sites: Array(1)}
+react-dom_client.js?v=3f5c2e7f:6264 ReferenceError: formatTime is not defined
+    at ProgressDisplay (ProgressDisplay.tsx:230:24)
+    at Object.react_stack_bottom_frame (react-dom_client.js?v=3f5c2e7f:17424:20)
+    at renderWithHooks (react-dom_client.js?v=3f5c2e7f:4206:24)
+    at updateFunctionComponent (react-dom_client.js?v=3f5c2e7f:6619:21)
+    at beginWork (react-dom_client.js?v=3f5c2e7f:7654:20)
+    at runWithFiberInDEV (react-dom_client.js?v=3f5c2e7f:1485:72)
+    at performUnitOfWork (react-dom_client.js?v=3f5c2e7f:10868:98)
+    at workLoopSync (react-dom_client.js?v=3f5c2e7f:10728:43)
+    at renderRootSync (react-dom_client.js?v=3f5c2e7f:10711:13)
+    at performWorkOnRoot (react-dom_client.js?v=3f5c2e7f:10359:46)
+    at performWorkOnRootViaSchedulerTask (react-dom_client.js?v=3f5c2e7f:11623:9)
+    at MessagePort.performWorkUntilDeadline (react-dom_client.js?v=3f5c2e7f:36:50)
+
+The above error occurred in the <ProgressDisplay> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, ErrorBoundary.
+
+defaultOnCaughtError @ react-dom_client.js?v=3f5c2e7f:6264
+logCaughtError @ react-dom_client.js?v=3f5c2e7f:6296
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+inst.componentDidCatch.update.callback @ react-dom_client.js?v=3f5c2e7f:6341
+callCallback @ react-dom_client.js?v=3f5c2e7f:4097
+commitCallbacks @ react-dom_client.js?v=3f5c2e7f:4109
+runWithFiberInDEV @ react-dom_client.js?v=3f5c2e7f:1485
+commitClassCallbacks @ react-dom_client.js?v=3f5c2e7f:8543
+commitLayoutEffectOnFiber @ react-dom_client.js?v=3f5c2e7f:9011
+recursivelyTraverseLayoutEffects @ react-dom_client.js?v=3f5c2e7f:9682
+commitLayoutEffectOnFiber @ react-dom_client.js?v=3f5c2e7f:9096
+recursivelyTraverseLayoutEffects @ react-dom_client.js?v=3f5c2e7f:9682
+commitLayoutEffectOnFiber @ react-dom_client.js?v=3f5c2e7f:9016
+flushLayoutEffects @ react-dom_client.js?v=3f5c2e7f:11174
+commitRoot @ react-dom_client.js?v=3f5c2e7f:11080
+commitRootWhenReady @ react-dom_client.js?v=3f5c2e7f:10512
+performWorkOnRoot @ react-dom_client.js?v=3f5c2e7f:10457
+performWorkOnRootViaSchedulerTask @ react-dom_client.js?v=3f5c2e7f:11623
+performWorkUntilDeadline @ react-dom_client.js?v=3f5c2e7f:36Understand this error
+ErrorBoundary.tsx:24 Uncaught error: ReferenceError: formatTime is not defined
+    at ProgressDisplay (ProgressDisplay.tsx:230:24)
+    at Object.react_stack_bottom_frame (react-dom_client.js?v=3f5c2e7f:17424:20)
+    at renderWithHooks (react-dom_client.js?v=3f5c2e7f:4206:24)
+    at updateFunctionComponent (react-dom_client.js?v=3f5c2e7f:6619:21)
+    at beginWork (react-dom_client.js?v=3f5c2e7f:7654:20)
+    at runWithFiberInDEV (react-dom_client.js?v=3f5c2e7f:1485:72)
+    at performUnitOfWork (react-dom_client.js?v=3f5c2e7f:10868:98)
+    at workLoopSync (react-dom_client.js?v=3f5c2e7f:10728:43)
+    at renderRootSync (react-dom_client.js?v=3f5c2e7f:10711:13)
+    at performWorkOnRoot (react-dom_client.js?v=3f5c2e7f:10359:46)
+    at performWorkOnRootViaSchedulerTask (react-dom_client.js?v=3f5c2e7f:11623:9)
+    at MessagePort.performWorkUntilDeadline (react-dom_client.js?v=3f5c2e7f:36:50) {componentStack: '\n    at ProgressDisplay (http://localhost:3001/src…3001/src/components/common/ErrorBoundary.tsx:6:1)'}

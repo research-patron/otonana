@@ -28,6 +28,7 @@ import {
   ListItemIcon,
   Tooltip,
   IconButton,
+  CircularProgress,
 } from '@mui/material';
 import {
   ExpandMore as ExpandMoreIcon,
@@ -44,12 +45,16 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { ja } from 'date-fns/locale';
-import RichTextEditor from './RichTextEditor';
 import MarkdownEditor from './MarkdownEditor';
 import FileUploader from './FileUploader';
+import HierarchicalCategorySelector from './HierarchicalCategorySelector';
+import SearchableTagSelector from './SearchableTagSelector';
+import SourceDataDisplay from './SourceDataDisplay';
 import { useAppStore } from '../../store';
-import type { DraftArticle, WordPressCategory, WordPressTag, AISuggestion, WordPressPost } from '../../types';
+import type { DraftArticle, WordPressCategory, WordPressTag, AISuggestion, WordPressPost, WordPressSite } from '../../types';
 import type { FileProcessingResult } from '../../services/fileProcessor';
+import { createCategory, createTag } from '../../services/wordpress';
+import { resolveAISuggestionWithProgress, type CreationProgress } from '../../utils/aiSuggestionUtils';
 
 interface ArticleEditorProps {
   draft?: DraftArticle;
@@ -64,13 +69,15 @@ interface ArticleEditorProps {
   onFileProcessed: (result: FileProcessingResult) => void;
   onFileError: (error: string) => void;
   fileContent?: FileProcessingResult | null;
+  originalInput?: string;
   isLoading?: boolean;
   onAIAdoptionStart?: () => void; // AI提案採用開始時のコールバック
   onAIAdoptionEnd?: () => void; // AI提案採用終了時のコールバック
   autoApplyNewSuggestion?: boolean; // 新しいAI提案を自動適用するかどうか
+  onCategoriesUpdate?: (categories: WordPressCategory[]) => void; // カテゴリー更新時のコールバック
+  onTagsUpdate?: (tags: WordPressTag[]) => void; // タグ更新時のコールバック
 }
 
-type EditorMode = 'visual' | 'markdown';
 
 function ArticleEditor({
   draft,
@@ -85,14 +92,16 @@ function ArticleEditor({
   onFileProcessed,
   onFileError,
   fileContent,
+  originalInput,
   isLoading = false,
   onAIAdoptionStart,
   onAIAdoptionEnd,
   autoApplyNewSuggestion = true,
+  onCategoriesUpdate,
+  onTagsUpdate,
 }: ArticleEditorProps) {
   const { config } = useAppStore();
   
-  const [editorMode, setEditorMode] = useState<EditorMode>('visual');
   const [article, setArticle] = useState<Partial<DraftArticle>>({
     title: '',
     content: '',
@@ -114,6 +123,9 @@ function ArticleEditor({
   const [showScheduleDialog, setShowScheduleDialog] = useState(false);
   const [scheduleDate, setScheduleDate] = useState<Date>(new Date(Date.now() + 60 * 60 * 1000)); // 1時間後をデフォルト
   const [scheduledPosts, setScheduledPosts] = useState<WordPressPost[]>([]);
+  const [localCategories, setLocalCategories] = useState<WordPressCategory[]>(categories);
+  const [localTags, setLocalTags] = useState<WordPressTag[]>(tags);
+  const [creationProgress, setCreationProgress] = useState<CreationProgress | null>(null);
 
   // デフォルトプロンプトを取得
   const defaultSystemPrompt = config?.prompts?.system || 'あなたは経験豊富なWebコンテンツライターです。ユーザーが提供する情報を基に、SEOに最適化された質の高い記事提案を行ってください。';
@@ -125,11 +137,20 @@ function ArticleEditor({
     }
   }, [defaultSystemPrompt, currentPrompt]);
   
+  // カテゴリー・タグの更新
+  useEffect(() => {
+    setLocalCategories(categories);
+  }, [categories]);
+
+  useEffect(() => {
+    setLocalTags(tags);
+  }, [tags]);
+
   // AI提案の自動適用
   useEffect(() => {
     if (suggestion && autoApplyNewSuggestion) {
       console.log('Auto-applying new AI suggestion...');
-      autoApplySuggestion(suggestion);
+      autoApplySuggestionWithCreation(suggestion);
     }
   }, [suggestion, autoApplyNewSuggestion]);
 
@@ -161,7 +182,85 @@ function ArticleEditor({
     return () => clearTimeout(timer);
   }, [article, autoSave, onSave, isAIAdoption, lastSavedContent]);
 
-  // AI提案の自動適用（新しいマークダウン形式対応）
+  // AI提案の自動適用（カテゴリー・タグ作成機能付き）
+  const autoApplySuggestionWithCreation = async (newSuggestion: AISuggestion) => {
+    if (!newSuggestion || !config?.currentSiteId) return;
+
+    setIsAIAdoption(true);
+    onAIAdoptionStart?.();
+
+    try {
+      // タイトルと本文の自動適用
+      if (newSuggestion.titles && newSuggestion.titles.length > 0) {
+        const suggestedTitle = newSuggestion.titles[0];
+        setArticle(prev => ({ ...prev, title: suggestedTitle }));
+      }
+      
+      if (newSuggestion.metaDescriptions && newSuggestion.metaDescriptions.length > 0) {
+        const suggestedMeta = newSuggestion.metaDescriptions[0];
+        setArticle(prev => ({ ...prev, metaDescription: suggestedMeta }));
+      }
+      
+      if (newSuggestion.fullArticle && newSuggestion.fullArticle.mainContent) {
+        const htmlContent = convertMarkdownToHtml(newSuggestion.fullArticle.mainContent);
+        setArticle(prev => ({ ...prev, content: htmlContent }));
+      }
+
+      // カテゴリー・タグの解決と作成
+      const currentSite = config.sites.find(site => site.id === config.currentSiteId);
+      if (currentSite) {
+        const resolved = await resolveAISuggestionWithProgress(
+          newSuggestion,
+          localCategories,
+          localTags,
+          currentSite,
+          setCreationProgress,
+          {
+            createNewCategories: true,
+            createNewTags: true,
+            maxNewCategories: 3,
+            maxNewTags: 5,
+          }
+        );
+
+        // 新しく作成されたカテゴリー・タグをローカル状態に追加
+        if (resolved.newlyCreatedCategories.length > 0) {
+          const updatedCategories = [...localCategories, ...resolved.newlyCreatedCategories];
+          setLocalCategories(updatedCategories);
+          onCategoriesUpdate?.(updatedCategories);
+        }
+
+        if (resolved.newlyCreatedTags.length > 0) {
+          const updatedTags = [...localTags, ...resolved.newlyCreatedTags];
+          setLocalTags(updatedTags);
+          onTagsUpdate?.(updatedTags);
+        }
+
+        // 記事にカテゴリー・タグを適用
+        setArticle(prev => ({
+          ...prev,
+          categories: resolved.allCategoryIds,
+          tags: resolved.allTagIds
+        }));
+
+        console.log('AI suggestion auto-applied with creation:', {
+          title: newSuggestion.titles[0],
+          createdCategories: resolved.newlyCreatedCategories.length,
+          createdTags: resolved.newlyCreatedTags.length,
+          totalCategories: resolved.allCategoryIds.length,
+          totalTags: resolved.allTagIds.length
+        });
+      }
+    } catch (error) {
+      console.error('Failed to auto-apply AI suggestion:', error);
+    } finally {
+      setIsAIAdoption(false);
+      setCreationProgress(null);
+      onAIAdoptionEnd?.();
+    }
+  };
+
+  // レガシー: AI提案の手動適用（既存のUI要素のため保持）
   const autoApplySuggestion = (newSuggestion: AISuggestion) => {
     if (!newSuggestion) return;
     
@@ -184,11 +283,7 @@ function ArticleEditor({
       setArticle(prev => ({ ...prev, content: htmlContent }));
     }
     
-    // カテゴリーとタグの自動適用（新規のみ、IDは後で解決）
-    const newCategories = newSuggestion.categories?.new || [];
-    const newTags = newSuggestion.tags?.new || [];
-    
-    // 既存のIDも含める
+    // カテゴリーとタグの自動適用（既存IDのみ）
     const existingCategoryIds = newSuggestion.categories?.existing || [];
     const existingTagIds = newSuggestion.tags?.existing || [];
     
@@ -197,14 +292,6 @@ function ArticleEditor({
       categories: [...existingCategoryIds, ...prev.categories || []],
       tags: [...existingTagIds, ...prev.tags || []]
     }));
-    
-    console.log('AI suggestion auto-applied:', {
-      title: newSuggestion.titles[0],
-      metaLength: newSuggestion.metaDescriptions[0]?.length,
-      contentLength: newSuggestion.fullArticle?.mainContent?.length,
-      categoriesCount: newCategories.length,
-      tagsCount: newTags.length
-    });
   };
   
   // マークダウンからHTMLに簡易変換
@@ -268,6 +355,54 @@ function ArticleEditor({
 
   const handleInputChange = (field: keyof DraftArticle) => (value: any) => {
     setArticle(prev => ({ ...prev, [field]: value }));
+  };
+
+  // 新規カテゴリー作成ハンドラー
+  const handleCreateNewCategory = async (categoryName: string): Promise<WordPressCategory> => {
+    if (!config?.currentSiteId) {
+      throw new Error('サイトが選択されていません');
+    }
+
+    const currentSite = config.sites.find(site => site.id === config.currentSiteId);
+    if (!currentSite) {
+      throw new Error('選択されたサイトが見つかりません');
+    }
+
+    const newCategory = await createCategory(currentSite, {
+      name: categoryName.trim(),
+      description: `手動作成されたカテゴリー: ${categoryName}`,
+    });
+
+    // ローカル状態を更新
+    const updatedCategories = [...localCategories, newCategory];
+    setLocalCategories(updatedCategories);
+    onCategoriesUpdate?.(updatedCategories);
+
+    return newCategory;
+  };
+
+  // 新規タグ作成ハンドラー
+  const handleCreateNewTag = async (tagName: string): Promise<WordPressTag> => {
+    if (!config?.currentSiteId) {
+      throw new Error('サイトが選択されていません');
+    }
+
+    const currentSite = config.sites.find(site => site.id === config.currentSiteId);
+    if (!currentSite) {
+      throw new Error('選択されたサイトが見つかりません');
+    }
+
+    const newTag = await createTag(currentSite, {
+      name: tagName.trim(),
+      description: `手動作成されたタグ: ${tagName}`,
+    });
+
+    // ローカル状態を更新
+    const updatedTags = [...localTags, newTag];
+    setLocalTags(updatedTags);
+    onTagsUpdate?.(updatedTags);
+
+    return newTag;
   };
 
   const isReadyToPublish = () => {
@@ -373,6 +508,13 @@ function ArticleEditor({
         </Grid>
       </Paper>
 
+      {/* 記事作成元情報 */}
+      <SourceDataDisplay 
+        draft={draft}
+        originalInput={originalInput}
+        fileContent={fileContent}
+      />
+
       <Grid container spacing={3}>
         {/* メインエディタエリア */}
         <Grid item xs={12} lg={8}>
@@ -389,39 +531,15 @@ function ArticleEditor({
             />
           </Paper>
 
-          {/* エディタモード切り替え */}
-          <Box sx={{ mb: 2, display: 'flex', gap: 1 }}>
-            <Button
-              variant={editorMode === 'visual' ? 'contained' : 'outlined'}
-              onClick={() => setEditorMode('visual')}
-            >
-              ビジュアル
-            </Button>
-            <Button
-              variant={editorMode === 'markdown' ? 'contained' : 'outlined'}
-              onClick={() => setEditorMode('markdown')}
-            >
-              Markdown
-            </Button>
-          </Box>
 
           {/* エディタ */}
           <Box sx={{ mb: 3 }}>
-            {editorMode === 'visual' ? (
-              <RichTextEditor
-                value={article.content || ''}
-                onChange={handleInputChange('content')}
-                onWordCountChange={setWordCount}
-                disabled={isLoading}
-              />
-            ) : (
-              <MarkdownEditor
-                value={article.content || ''}
-                onChange={handleInputChange('content')}
-                onWordCountChange={setWordCount}
-                disabled={isLoading}
-              />
-            )}
+            <MarkdownEditor
+              value={article.content || ''}
+              onChange={handleInputChange('content')}
+              onWordCountChange={setWordCount}
+              disabled={isLoading}
+            />
           </Box>
 
           {/* メタディスクリプション */}
@@ -569,57 +687,48 @@ function ArticleEditor({
               分類設定
             </Typography>
 
-            {/* カテゴリー */}
-            <FormControl fullWidth sx={{ mb: 2 }}>
-              <InputLabel>カテゴリー</InputLabel>
-              <Select
-                multiple
-                value={article.categories || []}
-                onChange={(e) => handleInputChange('categories')(e.target.value)}
-                renderValue={(selected) => (
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                    {(selected as number[]).map((value) => {
-                      const category = categories.find(cat => cat.id === value);
-                      return category ? (
-                        <Chip key={value} label={category.name} size="small" />
-                      ) : null;
-                    })}
-                  </Box>
-                )}
+            {/* AI作成進捗表示 */}
+            {creationProgress && (
+              <Alert 
+                severity="info" 
+                sx={{ mb: 2 }}
+                icon={<CircularProgress size={20} />}
               >
-                {categories.map((category) => (
-                  <MenuItem key={category.id} value={category.id}>
-                    {category.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+                <Typography variant="body2">
+                  {creationProgress.current} ({creationProgress.completed}/{creationProgress.total})
+                </Typography>
+                {creationProgress.errors.length > 0 && (
+                  <Typography variant="caption" color="error" display="block">
+                    {creationProgress.errors.length}件のエラーが発生しました
+                  </Typography>
+                )}
+              </Alert>
+            )}
 
-            {/* タグ */}
-            <FormControl fullWidth>
-              <InputLabel>タグ</InputLabel>
-              <Select
-                multiple
-                value={article.tags || []}
-                onChange={(e) => handleInputChange('tags')(e.target.value)}
-                renderValue={(selected) => (
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                    {(selected as number[]).map((value) => {
-                      const tag = tags.find(t => t.id === value);
-                      return tag ? (
-                        <Chip key={value} label={tag.name} size="small" />
-                      ) : null;
-                    })}
-                  </Box>
-                )}
-              >
-                {tags.map((tag) => (
-                  <MenuItem key={tag.id} value={tag.id}>
-                    {tag.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            {/* カテゴリー選択 */}
+            <Box sx={{ mb: 3 }}>
+              <HierarchicalCategorySelector
+                categories={localCategories}
+                selectedCategoryIds={article.categories || []}
+                onChange={(selectedIds) => handleInputChange('categories')(selectedIds)}
+                label="カテゴリー"
+                disabled={isLoading || isAIAdoption}
+              />
+            </Box>
+
+            {/* タグ選択 */}
+            <Box>
+              <SearchableTagSelector
+                tags={localTags}
+                selectedTagIds={article.tags || []}
+                onChange={(selectedIds) => handleInputChange('tags')(selectedIds)}
+                onCreateNewTag={handleCreateNewTag}
+                label="タグ"
+                allowCreate={true}
+                maxSelection={10}
+                disabled={isLoading || isAIAdoption}
+              />
+            </Box>
           </Paper>
 
           {/* 記事統計 */}

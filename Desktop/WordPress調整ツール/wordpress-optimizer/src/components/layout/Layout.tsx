@@ -19,7 +19,6 @@ import {
 } from '@mui/material';
 import {
   Menu as MenuIcon,
-  Dashboard as DashboardIcon,
   Add as AddIcon,
   Article as ArticleIcon,
   Analytics as AnalyticsIcon,
@@ -28,6 +27,9 @@ import {
   DarkMode as DarkModeIcon,
   Logout as LogoutIcon,
   History as HistoryIcon,
+  Psychology as PsychologyIcon,
+  Assessment as AssessmentIcon,
+  AutoFixHigh as RewriteIcon,
 } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAppStore } from '../../store';
@@ -51,11 +53,6 @@ function Layout({ children }: LayoutProps) {
 
   const menuItems = [
     {
-      text: 'ダッシュボード',
-      icon: <DashboardIcon />,
-      path: '/',
-    },
-    {
       text: '新規作成',
       icon: <AddIcon />,
       path: '/create',
@@ -66,14 +63,14 @@ function Layout({ children }: LayoutProps) {
       path: '/drafts',
     },
     {
-      text: 'プロンプト履歴',
-      icon: <HistoryIcon />,
-      path: '/prompt-history',
+      text: '品質チェック',
+      icon: <AssessmentIcon />,
+      path: '/quality-check',
     },
     {
-      text: '使用統計',
-      icon: <AnalyticsIcon />,
-      path: '/stats',
+      text: 'リライト提案',
+      icon: <RewriteIcon />,
+      path: '/rewrite-suggestions',
     },
     {
       text: '設定',

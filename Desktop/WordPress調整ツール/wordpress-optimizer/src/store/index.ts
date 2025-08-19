@@ -58,6 +58,9 @@ export const useAppStore = create<AppStore>()(
       setConfig: (config) => set({ config }),
       
       updateGeminiApiKey: (apiKey) => {
+        // この関数は平文のAPIキーを受け取る
+        console.log('Debug - Store: Receiving API key (plain text), length:', apiKey?.length || 0);
+        
         const newConfig = {
           ...get().config,
           geminiApiKey: apiKey,
@@ -195,19 +198,36 @@ export const useDraftStore = create<DraftStore>()(
       
       addDraft: (draft) => {
         const state = get();
+        const now = new Date().toISOString();
         
-        // 重複チェック: 同じサイト、同じAI提案ID、類似タイトルの下書きがあるかチェック
-        const existingDraft = state.drafts.find(existing => 
-          existing.siteId === draft.siteId &&
-          existing.aiSuggestionId === draft.aiSuggestionId &&
-          existing.aiSuggestionId && // AI提案IDが存在する場合のみ
-          existing.title.trim() === draft.title.trim()
-        );
+        // 強化された重複チェック
+        const existingDraft = state.drafts.find(existing => {
+          // 同じサイトでなければ除外
+          if (existing.siteId !== draft.siteId) return false;
+          
+          // AI提案IDが両方に存在する場合
+          if (existing.aiSuggestionId && draft.aiSuggestionId) {
+            return existing.aiSuggestionId === draft.aiSuggestionId;
+          }
+          
+          // タイトルと作成時刻の近さでチェック（AI提案IDがない場合）
+          if (existing.title.trim() === draft.title.trim()) {
+            const existingTime = new Date(existing.createdAt).getTime();
+            const currentTime = Date.now();
+            const timeDiff = currentTime - existingTime;
+            
+            // 5分以内に作成された同タイトルの下書きは重複とみなす
+            if (timeDiff < 5 * 60 * 1000) {
+              return true;
+            }
+          }
+          
+          return false;
+        });
         
         if (existingDraft) {
           // 既存の下書きを更新
           console.log('Updating existing draft instead of creating new one:', existingDraft.id);
-          const now = new Date().toISOString();
           const updatedDraft = {
             ...existingDraft,
             ...draft,
@@ -227,13 +247,14 @@ export const useDraftStore = create<DraftStore>()(
         
         // 新しい下書きを作成
         const id = `draft_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-        const now = new Date().toISOString();
         const newDraft: DraftArticle = {
           ...draft,
           id,
           createdAt: now,
           updatedAt: now,
         };
+        
+        console.log('Creating new draft:', { id: newDraft.id, title: newDraft.title, aiSuggestionId: newDraft.aiSuggestionId });
         
         set((state) => ({
           drafts: [...state.drafts, newDraft],

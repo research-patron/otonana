@@ -1,17 +1,19 @@
 import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider, CssBaseline } from '@mui/material';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { ja } from 'date-fns/locale';
 import { lightTheme, darkTheme } from './config/theme';
 import { useAppStore } from './store';
 import Layout from './components/layout/Layout';
 import LoadingScreen from './components/common/LoadingScreen';
-import Dashboard from './pages/Dashboard';
 import Settings from './pages/Settings';
 import CreateArticle from './pages/CreateArticle';
 import DraftsList from './pages/DraftsList';
 import EditDraft from './pages/EditDraft';
-import Stats from './pages/Stats';
-import PromptHistory from './pages/PromptHistory';
+import QualityCheck from './pages/QualityCheck';
+import RewriteSuggestions from './pages/RewriteSuggestions';
 
 function App() {
   const { config, isInitialized, initialize } = useAppStore();
@@ -40,19 +42,21 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Router>
-        <Layout>
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/create" element={<CreateArticle />} />
-            <Route path="/drafts" element={<DraftsList />} />
-            <Route path="/edit/:draftId" element={<EditDraft />} />
-            <Route path="/prompt-history" element={<PromptHistory />} />
-            <Route path="/stats" element={<Stats />} />
-            <Route path="/settings" element={<Settings />} />
-          </Routes>
-        </Layout>
-      </Router>
+      <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ja}>
+        <Router>
+          <Layout>
+            <Routes>
+              <Route path="/" element={<CreateArticle />} />
+              <Route path="/create" element={<CreateArticle />} />
+              <Route path="/drafts" element={<DraftsList />} />
+              <Route path="/edit/:draftId" element={<EditDraft />} />
+              <Route path="/quality-check" element={<QualityCheck />} />
+              <Route path="/rewrite-suggestions" element={<RewriteSuggestions />} />
+              <Route path="/settings" element={<Settings />} />
+            </Routes>
+          </Layout>
+        </Router>
+      </LocalizationProvider>
     </ThemeProvider>
   );
 }

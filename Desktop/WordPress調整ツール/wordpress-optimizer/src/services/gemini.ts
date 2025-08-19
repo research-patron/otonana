@@ -2,13 +2,14 @@ import type {
   GeminiRequest, 
   GeminiResponse, 
   AISuggestion, 
+  StructuredAIResponse,
   APIError,
   PromptTemplate,
   SiteAnalysis,
   WordPressCategory,
-  WordPressTag
+  WordPressTag,
+  GeminiQualityAnalysis
 } from '../types';
-import { decryptApiKey } from '../utils/crypto';
 
 // Gemini API 設定
 const GEMINI_API_BASE = 'https://generativelanguage.googleapis.com/v1beta';
@@ -75,6 +76,102 @@ class RateLimiter {
 }
 
 const rateLimiter = new RateLimiter();
+
+// 構造化レスポンス用のJSON Schema
+const STRUCTURED_RESPONSE_SCHEMA = {
+  type: "object",
+  properties: {
+    title: {
+      type: "string",
+      description: "記事のタイトル（32文字以内推奨）"
+    },
+    meta_description: {
+      type: "string", 
+      description: "メタディスクリプション（120-160文字）"
+    },
+    categories: {
+      type: "array",
+      items: { type: "string" },
+      description: "推奨カテゴリーの配列"
+    },
+    tags: {
+      type: "array",
+      items: { type: "string" },
+      description: "推奨タグの配列（5個以内）"
+    },
+    text: {
+      type: "string",
+      description: "記事本文（markdown形式）"
+    },
+    seo_keywords: {
+      type: "array",
+      items: { type: "string" },
+      description: "SEOキーワード（オプション）"
+    }
+  },
+  required: ["title", "meta_description", "categories", "tags", "text"]
+};
+
+// 構造化レスポンスをAISuggestion形式に変換
+const convertStructuredToAISuggestion = (structuredResponse: StructuredAIResponse): AISuggestion => {
+  console.log('Converting structured response to AISuggestion:', structuredResponse);
+  
+  // 見出し構造の抽出（textフィールドから）
+  const headings: Array<{ level: number; text: string; description: string }> = [];
+  const headingMatches = structuredResponse.text.match(/^(#{1,6})\s+(.+)$/gm);
+  
+  if (headingMatches) {
+    headingMatches.forEach(match => {
+      const levelMatch = match.match(/^(#{1,6})\s+(.+)$/);
+      if (levelMatch) {
+        const level = levelMatch[1].length;
+        const text = levelMatch[2].trim();
+        headings.push({
+          level,
+          text,
+          description: `${text}に関する詳細な解説`
+        });
+      }
+    });
+  }
+  
+  // 記事構造の分析
+  const sections = structuredResponse.text.split(/^#{1,6}\s+/m);
+  const introduction = sections[0] ? sections[0].trim().substring(0, 300) : '';
+  const conclusion = sections.length > 1 ? sections[sections.length - 1].trim().substring(-200) : '';
+  
+  const suggestion: AISuggestion = {
+    titles: [structuredResponse.title],
+    categories: {
+      existing: [],
+      new: structuredResponse.categories
+    },
+    tags: {
+      existing: [],
+      new: structuredResponse.tags
+    },
+    structure: {
+      headings
+    },
+    metaDescriptions: [structuredResponse.meta_description],
+    fullArticle: {
+      introduction,
+      mainContent: structuredResponse.text,
+      conclusion
+    },
+    structuredResponse // 元の構造化レスポンスも保持
+  };
+  
+  console.log('Converted to AISuggestion:', {
+    titlesCount: suggestion.titles.length,
+    categoriesCount: suggestion.categories.new.length,
+    tagsCount: suggestion.tags.new.length,
+    headingsCount: suggestion.structure.headings.length,
+    hasStructuredResponse: !!suggestion.structuredResponse
+  });
+  
+  return suggestion;
+};
 
 // マークダウン記事をAISuggestion形式にパースする関数
 const parseMarkdownArticle = (text: string): AISuggestion => {
@@ -228,6 +325,8 @@ const makeGeminiRequest = async (
     topP?: number;
     topK?: number;
     isConnectionTest?: boolean;
+    responseSchema?: any; // JSON Schema for structured response
+    useStructuredResponse?: boolean; // 構造化レスポンスを使用するかどうか
   } = {}
 ): Promise<GeminiResponse> => {
   try {
@@ -237,7 +336,31 @@ const makeGeminiRequest = async (
       topP = 0.8,
       topK = 40,
       isConnectionTest = false,
+      responseSchema,
+      useStructuredResponse = false,
     } = options;
+
+    // リクエストボディを構築
+    const requestBody: any = {
+      contents: [
+        {
+          parts: [{ text: prompt }]
+        }
+      ],
+      generationConfig: {
+        temperature,
+        maxOutputTokens,
+        topP,
+        topK,
+      },
+    };
+
+    // 構造化レスポンスの場合はresponseSchemaを追加
+    if (useStructuredResponse && responseSchema) {
+      requestBody.generationConfig.responseSchema = responseSchema;
+      requestBody.generationConfig.responseMimeType = "application/json";
+      console.log('Using structured response with schema:', responseSchema);
+    }
 
     const response = await fetch(
       `${GEMINI_API_BASE}/models/${model}:generateContent?key=${apiKey}`,
@@ -246,19 +369,7 @@ const makeGeminiRequest = async (
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          contents: [
-            {
-              parts: [{ text: prompt }]
-            }
-          ],
-          generationConfig: {
-            temperature,
-            maxOutputTokens,
-            topP,
-            topK,
-          },
-        }),
+        body: JSON.stringify(requestBody),
       }
     );
 
@@ -360,9 +471,8 @@ const makeGeminiRequest = async (
 };
 
 // APIキーの検証
-export const validateGeminiApiKey = async (encryptedApiKey: string): Promise<boolean> => {
+export const validateGeminiApiKey = async (apiKey: string): Promise<boolean> => {
   try {
-    const apiKey = decryptApiKey(encryptedApiKey);
     
     // 簡単なリクエストでAPIキーを検証
     await makeGeminiRequest(
@@ -379,7 +489,137 @@ export const validateGeminiApiKey = async (encryptedApiKey: string): Promise<boo
   }
 };
 
-// 記事生成（簡素化版）
+// 構造化レスポンス用の記事生成（新機能）
+export const generateArticleSuggestionsStructured = async (
+  apiKey: string,
+  model: string,
+  input: string,
+  siteAnalysis?: SiteAnalysis,
+  template?: PromptTemplate,
+  fileContent?: {
+    text: string;
+    headings: Array<{ level: number; text: string }>;
+    keywords: string[];
+    structure: string;
+  }
+): Promise<AISuggestion> => {
+  try {
+    // レート制限チェック
+    if (!rateLimiter.canMakeRequest(model, 3000)) {
+      throw new GeminiAPIError(
+        'RATE_LIMIT',
+        'レート制限に達しました。しばらく待ってから再試行してください。'
+      );
+    }
+
+    // コンテキスト情報の構築
+    let context = '';
+    if (siteAnalysis) {
+      context += `\n\nサイト情報：
+- よく使われるキーワード: ${siteAnalysis.commonKeywords.slice(0, 8).join(', ')}
+- 平均記事文字数: ${siteAnalysis.averagePostLength}文字
+- 既存カテゴリー: ${siteAnalysis.categories.map(c => c.name).slice(0, 5).join(', ')}`;
+    }
+
+    // ファイル内容情報の追加
+    if (fileContent) {
+      context += `\n\nアップロードファイル情報：
+- 抽出キーワード: ${fileContent.keywords.slice(0, 5).join(', ')}
+- 見出し数: ${fileContent.headings.length}`;
+    }
+
+    // プロンプトテンプレートの適用
+    let systemPrompt = template?.system || SYSTEM_PROMPTS.analyze;
+    if (template) {
+      systemPrompt = `${template.system}
+
+書き方のトーン: ${template.tone}
+ターゲット読者: ${template.targetAudience}
+SEO重視度: ${template.seoFocus}/10
+記事の目的: ${template.purpose}`;
+    }
+
+    // 入力内容の構築
+    let inputContent = input;
+    if (fileContent && fileContent.text) {
+      inputContent = `${input}
+
+【参考ファイル内容】
+${fileContent.text.substring(0, 1500)}${fileContent.text.length > 1500 ? '...(省略)' : ''}`;
+    }
+
+    // 現在の記事状態の検出
+    const hasCurrentState = input.includes('現在の記事状態:') || input.includes('追加指示・修正要求:');
+    
+    if (hasCurrentState) {
+      console.log('Detected article improvement request with current state context');
+    }
+
+    const fullPrompt = `${systemPrompt}${context}
+
+【依頼内容】
+${inputContent}
+
+【重要な指示】
+${hasCurrentState ? 
+  '- 現在の記事状態を踏まえて、指定された修正・改善要求に対応してください\n- 既存の内容を活かしつつ、より良い記事に改善してください' : 
+  '- 提供された情報を基に、SEOに最適化された高品質な記事を作成してください'
+}
+
+【出力要求】
+以下のJSON形式で構造化された記事データを作成してください：
+
+- title: 魅力的で検索に最適化された記事タイトル（32文字以内推奨）
+- meta_description: SEO効果的なメタディスクリプション（120-160文字）
+- categories: 適切なカテゴリー名の配列（2-3個）
+- tags: 関連性の高いタグの配列（3-5個）
+- text: 完全な記事本文（markdown形式、適切な見出し構造を含む）
+
+記事は読みやすく、情報価値が高く、SEOに最適化された内容にしてください。`;
+
+    // 構造化レスポンス取得
+    const response = await makeGeminiRequest(apiKey, model, fullPrompt, {
+      temperature: 0.8,
+      maxOutputTokens: 32768,
+      isConnectionTest: false,
+      useStructuredResponse: true,
+      responseSchema: STRUCTURED_RESPONSE_SCHEMA,
+    });
+
+    try {
+      // JSON レスポンスをパース
+      const structuredResponse: StructuredAIResponse = JSON.parse(response.text);
+      console.log('Successfully parsed structured response:', {
+        title: structuredResponse.title.substring(0, 50) + '...',
+        metaLength: structuredResponse.meta_description.length,
+        categoriesCount: structuredResponse.categories.length,
+        tagsCount: structuredResponse.tags.length,
+        textLength: structuredResponse.text.length
+      });
+
+      // 構造化レスポンスをAISuggestion形式に変換
+      return convertStructuredToAISuggestion(structuredResponse);
+      
+    } catch (parseError) {
+      console.error('Failed to parse structured JSON response, falling back to markdown parsing:', parseError);
+      // フォールバック: markdownパースを使用
+      return parseMarkdownArticle(response.text);
+    }
+
+  } catch (error) {
+    if (error instanceof GeminiAPIError) {
+      throw error;
+    }
+    
+    throw new GeminiAPIError(
+      'GENERATION_ERROR',
+      '構造化記事提案の生成中にエラーが発生しました',
+      error
+    );
+  }
+};
+
+// 記事生成（従来版・互換性のため保持）
 export const generateArticleSuggestions = async (
   apiKey: string,
   model: string,
@@ -495,7 +735,7 @@ ${hasCurrentState ?
 
 // 記事本文生成
 export const generateArticleContent = async (
-  encryptedApiKey: string,
+  apiKey: string,
   model: string,
   title: string,
   structure: AISuggestion['structure'],
@@ -506,7 +746,6 @@ export const generateArticleContent = async (
   } = {}
 ): Promise<string> => {
   try {
-    const apiKey = decryptApiKey(encryptedApiKey);
     
     const { tone = 'professional', targetLength = 2000, keywords = [] } = additionalInfo;
     
@@ -530,7 +769,7 @@ HTML形式で記事を作成してください。`;
 
     const response = await makeGeminiRequest(apiKey, model, prompt, {
       temperature: 0.7,
-      maxOutputTokens: 4096,
+      maxOutputTokens: 65535,
     });
 
     return response.text;
@@ -632,6 +871,262 @@ export const testGeminiConnection = async (
   }
 };
 
+// 記事品質分析機能
+export const analyzeArticleQuality = async (
+  title: string,
+  content: string,
+  analysisConfig: {
+    checkMisinformation: boolean;
+    checkRecency: boolean;
+    checkLogicalConsistency: boolean;
+    checkSEO: boolean;
+    checkReadability: boolean;
+  },
+  apiKey?: string,
+  model: string = 'gemini-2.5-flash'
+): Promise<GeminiQualityAnalysis> => {
+  try {
+    if (!apiKey) {
+      throw new GeminiAPIError('NO_API_KEY', 'APIキーが提供されていません');
+    }
+
+    // HTMLタグを除去してプレーンテキストに変換
+    const plainContent = content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+    
+    // 分析する項目を決定
+    const analysisItems = [];
+    if (analysisConfig.checkMisinformation) analysisItems.push('誤情報のリスク');
+    if (analysisConfig.checkRecency) analysisItems.push('情報の最新性');
+    if (analysisConfig.checkLogicalConsistency) analysisItems.push('論理的整合性');
+    if (analysisConfig.checkSEO) analysisItems.push('SEO要素');
+    if (analysisConfig.checkReadability) analysisItems.push('読みやすさ');
+
+    if (analysisItems.length === 0) {
+      // 何もチェックしない場合は空の結果を返す
+      return {
+        misinformationRisk: { score: 100, issues: [], recommendations: [] },
+        recencyCheck: { score: 100, outdatedInfo: [], updateSuggestions: [] },
+        logicalConsistency: { score: 100, inconsistencies: [], improvements: [] },
+        seoAnalysis: { metaDescriptionScore: 100, headingStructureScore: 100, brokenLinks: [], recommendations: [] },
+        readabilityScore: { score: 100, sentenceLengthIssues: 0, complexTermsCount: 0, missingAltTexts: 0, suggestions: [] }
+      };
+    }
+
+    const analysisPrompt = `記事品質分析を実行してください。
+
+【記事タイトル】
+${title}
+
+【記事内容】
+${plainContent.substring(0, 3000)}${plainContent.length > 3000 ? '...(省略)' : ''}
+
+【分析項目】
+${analysisItems.join(', ')}
+
+【分析指示】
+以下の各項目について0-100点のスコアと具体的な問題点・改善案を提供してください：
+
+${analysisConfig.checkMisinformation ? `
+1. 誤情報リスク分析 (0-100点):
+- 事実確認が必要な記述の特定
+- 信頼性に欠ける可能性のある情報
+- 出典や根拠が不明確な主張
+` : ''}
+
+${analysisConfig.checkRecency ? `
+2. 情報の最新性チェック (0-100点):
+- 古くなっている可能性のある情報
+- 更新が必要な統計データや法規制
+- 最新トレンドとの整合性
+` : ''}
+
+${analysisConfig.checkLogicalConsistency ? `
+3. 論理的整合性 (0-100点):
+- 論理の飛躍や矛盾
+- 根拠と結論の整合性
+- 論理構造の明確性
+` : ''}
+
+${analysisConfig.checkSEO ? `
+4. SEO要素分析 (0-100点):
+- メタディスクリプションの適切性
+- 見出し構造の階層性
+- リンク切れの可能性
+- SEO最適化の推奨事項
+` : ''}
+
+${analysisConfig.checkReadability ? `
+5. 読みやすさ評価 (0-100点):
+- 文章の長さの適切性
+- 専門用語の説明不足
+- 画像のalt属性不足
+- 読みやすさ改善の提案
+` : ''}
+
+【回答形式】
+JSON形式で以下の構造で回答してください：
+
+{
+  "misinformationRisk": {
+    "score": 数値,
+    "issues": ["問題点1", "問題点2"],
+    "recommendations": ["改善案1", "改善案2"]
+  },
+  "recencyCheck": {
+    "score": 数値,
+    "outdatedInfo": ["古い情報1", "古い情報2"],
+    "updateSuggestions": ["更新提案1", "更新提案2"]
+  },
+  "logicalConsistency": {
+    "score": 数値,
+    "inconsistencies": ["矛盾点1", "矛盾点2"],
+    "improvements": ["改善案1", "改善案2"]
+  },
+  "seoAnalysis": {
+    "metaDescriptionScore": 数値,
+    "headingStructureScore": 数値,
+    "brokenLinks": ["リンク1", "リンク2"],
+    "recommendations": ["SEO改善案1", "SEO改善案2"]
+  },
+  "readabilityScore": {
+    "score": 数値,
+    "sentenceLengthIssues": 数値,
+    "complexTermsCount": 数値,
+    "missingAltTexts": 数値,
+    "suggestions": ["読みやすさ改善案1", "読みやすさ改善案2"]
+  }
+}
+
+分析しない項目についてはスコア100、空の配列で回答してください。`;
+
+    // Gemini APIで分析実行
+    const response = await makeGeminiRequest(apiKey, model, analysisPrompt, {
+      temperature: 0.3, // 分析の一貫性のため低めに設定
+      maxOutputTokens: 65535,
+      isConnectionTest: false,
+    });
+
+    try {
+      // レスポンスをクリーニング（マークダウンコードブロックを除去）
+      let cleanedResponse = response.text.trim();
+      
+      // ```json で始まり ``` で終わるマークダウンコードブロックを除去
+      if (cleanedResponse.startsWith('```json')) {
+        cleanedResponse = cleanedResponse.replace(/^```json\s*/, '');
+      }
+      if (cleanedResponse.endsWith('```')) {
+        cleanedResponse = cleanedResponse.replace(/\s*```$/, '');
+      }
+      
+      // 先頭末尾の ``` のみを除去（汎用的な処理）
+      cleanedResponse = cleanedResponse.replace(/^```\s*/, '').replace(/\s*```$/, '');
+      
+      console.log('Debug - Gemini Response Cleaning:', {
+        originalLength: response.text.length,
+        cleanedLength: cleanedResponse.length,
+        startsWith: cleanedResponse.substring(0, 50),
+        endsWith: cleanedResponse.substring(cleanedResponse.length - 50)
+      });
+      
+      // JSONレスポンスをパース
+      const analysisResult: GeminiQualityAnalysis = JSON.parse(cleanedResponse);
+      
+      // データの妥当性チェック
+      const sanitizedResult: GeminiQualityAnalysis = {
+        misinformationRisk: {
+          score: Math.max(0, Math.min(100, analysisResult.misinformationRisk?.score || 100)),
+          issues: Array.isArray(analysisResult.misinformationRisk?.issues) ? analysisResult.misinformationRisk.issues : [],
+          recommendations: Array.isArray(analysisResult.misinformationRisk?.recommendations) ? analysisResult.misinformationRisk.recommendations : []
+        },
+        recencyCheck: {
+          score: Math.max(0, Math.min(100, analysisResult.recencyCheck?.score || 100)),
+          outdatedInfo: Array.isArray(analysisResult.recencyCheck?.outdatedInfo) ? analysisResult.recencyCheck.outdatedInfo : [],
+          updateSuggestions: Array.isArray(analysisResult.recencyCheck?.updateSuggestions) ? analysisResult.recencyCheck.updateSuggestions : []
+        },
+        logicalConsistency: {
+          score: Math.max(0, Math.min(100, analysisResult.logicalConsistency?.score || 100)),
+          inconsistencies: Array.isArray(analysisResult.logicalConsistency?.inconsistencies) ? analysisResult.logicalConsistency.inconsistencies : [],
+          improvements: Array.isArray(analysisResult.logicalConsistency?.improvements) ? analysisResult.logicalConsistency.improvements : []
+        },
+        seoAnalysis: {
+          metaDescriptionScore: Math.max(0, Math.min(100, analysisResult.seoAnalysis?.metaDescriptionScore || 100)),
+          headingStructureScore: Math.max(0, Math.min(100, analysisResult.seoAnalysis?.headingStructureScore || 100)),
+          brokenLinks: Array.isArray(analysisResult.seoAnalysis?.brokenLinks) ? analysisResult.seoAnalysis.brokenLinks : [],
+          recommendations: Array.isArray(analysisResult.seoAnalysis?.recommendations) ? analysisResult.seoAnalysis.recommendations : []
+        },
+        readabilityScore: {
+          score: Math.max(0, Math.min(100, analysisResult.readabilityScore?.score || 100)),
+          sentenceLengthIssues: Math.max(0, analysisResult.readabilityScore?.sentenceLengthIssues || 0),
+          complexTermsCount: Math.max(0, analysisResult.readabilityScore?.complexTermsCount || 0),
+          missingAltTexts: Math.max(0, analysisResult.readabilityScore?.missingAltTexts || 0),
+          suggestions: Array.isArray(analysisResult.readabilityScore?.suggestions) ? analysisResult.readabilityScore.suggestions : []
+        }
+      };
+
+      return sanitizedResult;
+      
+    } catch (parseError) {
+      console.error('Failed to parse quality analysis JSON response:', parseError);
+      console.error('Raw response (first 500 chars):', response.text.substring(0, 500));
+      console.error('Raw response (last 100 chars):', response.text.substring(Math.max(0, response.text.length - 100)));
+      
+      // JSONパースエラーの詳細情報をログ出力
+      if (parseError instanceof SyntaxError) {
+        console.error('JSON Syntax Error details:', {
+          message: parseError.message,
+          responseStartsWith: response.text.substring(0, 100),
+          responseEndsWith: response.text.substring(Math.max(0, response.text.length - 100)),
+          containsMarkdown: response.text.includes('```'),
+          cleanedResponseStart: cleanedResponse.substring(0, 100)
+        });
+      }
+      
+      // パースに失敗した場合は簡易分析結果を返す
+      return {
+        misinformationRisk: {
+          score: 80,
+          issues: ['JSONパースエラーのため詳細分析できませんでした'],
+          recommendations: ['手動での内容確認を推奨します']
+        },
+        recencyCheck: {
+          score: 80,
+          outdatedInfo: ['分析エラーのため確認できませんでした'],
+          updateSuggestions: ['手動での最新性確認を推奨します']
+        },
+        logicalConsistency: {
+          score: 80,
+          inconsistencies: ['分析エラーのため確認できませんでした'],
+          improvements: ['手動での論理性確認を推奨します']
+        },
+        seoAnalysis: {
+          metaDescriptionScore: 80,
+          headingStructureScore: 80,
+          brokenLinks: [],
+          recommendations: ['手動でのSEO確認を推奨します']
+        },
+        readabilityScore: {
+          score: 80,
+          sentenceLengthIssues: 0,
+          complexTermsCount: 0,
+          missingAltTexts: 0,
+          suggestions: ['手動での読みやすさ確認を推奨します']
+        }
+      };
+    }
+
+  } catch (error) {
+    if (error instanceof GeminiAPIError) {
+      throw error;
+    }
+    
+    throw new GeminiAPIError(
+      'QUALITY_ANALYSIS_ERROR',
+      '記事品質分析中にエラーが発生しました',
+      error
+    );
+  }
+};
+
 export default {
   validateGeminiApiKey,
   generateArticleSuggestions,
@@ -640,4 +1135,5 @@ export default {
   getAvailableModels,
   handleGeminiError,
   testGeminiConnection,
+  analyzeArticleQuality,
 };
